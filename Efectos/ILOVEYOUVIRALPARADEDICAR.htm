@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>I LOVE YOU ❤️</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+html, body {
+    margin: 0;
+    padding: 0;
+    background: radial-gradient(circle at top, #120018, #000);
+    overflow: hidden;
+    height: 100%;
+}
+
+/* CANVAS */
+canvas { display: block; }
+
+/* TEXTO PROFESIONAL */
+.text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: "Montserrat", "Poppins", system-ui, sans-serif;
+    font-size: clamp(2.4rem, 5vw, 4.2rem);
+    font-weight: 600;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+
+    background: linear-gradient(
+        120deg,
+        #ffffff,
+        #ff8fa3,
+        #ffd6e0,
+        #ffffff
+    );
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+
+    opacity: 0;
+    filter: blur(10px);
+    animation:
+        textReveal 2.5s ease forwards 6s,
+        gradientFlow 8s ease-in-out infinite,
+        subtleBeat 3.5s ease-in-out infinite;
+
+    pointer-events: none;
+}
+
+/* Animaciones limpias */
+@keyframes textReveal {
+    to {
+        opacity: 1;
+        filter: blur(0);
+    }
+}
+
+@keyframes gradientFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes subtleBeat {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.025); }
+}
+</style>
+</head>
+
+<body>
+<canvas id="canvas"></canvas>
+<div class="text">I&nbsp;LOVE&nbsp;YOU</div>
+
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+function resize() {
+    canvas.width = innerWidth;
+    canvas.height = innerHeight;
+}
+resize();
+addEventListener("resize", resize);
+
+const gravity = 0.08;
+const friction = 0.995;
+const particles = [];
+let heartPoints = [];
+let formHeart = false;
+
+function heart(t) {
+    return {
+        x: 16 * Math.pow(Math.sin(t), 3),
+        y: -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t))
+    };
+}
+
+function generateHeart() {
+    heartPoints = [];
+    const scale = Math.min(canvas.width, canvas.height) / 40;
+    for (let i = 0; i < 2000; i++) {
+        const t = Math.random() * Math.PI * 2;
+        const p = heart(t);
+        heartPoints.push({
+            x: canvas.width / 2 + p.x * scale,
+            y: canvas.height / 2 + p.y * scale
+        });
+    }
+}
+
+class Particle {
+    constructor(i) {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * -canvas.height;
+        this.vx = (Math.random() - 0.5) * 2;
+        this.vy = Math.random() * 2;
+        this.r = Math.random() * 2 + 1;
+        this.hue = Math.random() * 360;
+        this.target = null;
+    }
+
+    update() {
+        if (formHeart && this.target) {
+            const dx = this.target.x - this.x;
+            const dy = this.target.y - this.y;
+            this.vx += dx * 0.002;
+            this.vy += dy * 0.002;
+        } else {
+            this.vy += gravity;
+        }
+
+        this.x += this.vx;
+        this.y += this.vy;
+
+        if (this.y + this.r > canvas.height) {
+            this.y = canvas.height - this.r;
+            this.vy *= -0.6;
+        }
+
+        this.vx *= friction;
+        this.vy *= friction;
+    }
+
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.fillStyle = `hsl(${this.hue},100%,60%)`;
+        ctx.fill();
+    }
+}
+
+const TOTAL = 1600;
+for (let i = 0; i < TOTAL; i++) {
+    particles.push(new Particle(i));
+}
+
+generateHeart();
+
+setTimeout(() => {
+    formHeart = true;
+    particles.forEach((p, i) => {
+        p.target = heartPoints[i % heartPoints.length];
+    });
+}, 3000);
+
+function animate() {
+    ctx.fillStyle = "rgba(0,0,0,0.25)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    particles.forEach(p => {
+        p.update();
+        p.draw();
+    });
+
+    requestAnimationFrame(animate);
+}
+animate();
+</script>
+</body>
+</html>

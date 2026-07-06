@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mensaje Especial 💌</title>
+    <style>
+        /* Paleta de colores y estilos generales */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffe6ea; /* Rosa pastel Hello Kitty */
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Efecto de burbujas/corazones de fondo */
+        .background-animation {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .bubble {
+            position: absolute;
+            bottom: -20px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: floatUp linear infinite;
+        }
+        @keyframes floatUp {
+            to { transform: translateY(-120vh); opacity: 0; }
+        }
+
+        /* Pantalla de Inicio */
+        #start-screen {
+            z-index: 10;
+            text-align: center;
+        }
+        .pulse-btn {
+            background-color: #ff5277;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 30px;
+            box-shadow: 0 10px 20px rgba(255, 82, 119, 0.3);
+            cursor: pointer;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Pantalla de Chat */
+        #chat-screen {
+            display: none;
+            flex-direction: column;
+            width: 100%;
+            max-width: 400px;
+            height: 90vh;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            box-shadow: 0 15px 25px rgba(0,0,0,0.1);
+            z-index: 10;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Personaje (Pez Hello Kitty) */
+        .character-container {
+            text-align: center;
+            padding: 20px;
+            background: #ffccd5;
+            border-bottom: 2px solid #ffb3c1;
+        }
+        .character-img {
+            font-size: 4rem; /* Cambia esto por la etiqueta <img> cuando tengas tu imagen sin fondo */
+            animation: bounce 2s infinite ease-in-out;
+            display: inline-block;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Ventana de mensajes */
+        .chat-box {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .message {
+            background: white;
+            padding: 12px 18px;
+            border-radius: 20px;
+            border-top-left-radius: 0;
+            max-width: 80%;
+            align-self: flex-start;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            font-weight: 500;
+            color: #333;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeInMsg 0.3s forwards;
+        }
+        @keyframes fadeInMsg {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Indicador de escribiendo... */
+        .typing {
+            display: none;
+            background: #f0f0f0;
+            padding: 10px 15px;
+            border-radius: 20px;
+            align-self: flex-start;
+            font-weight: bold;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Animación de fondo -->
+    <div class="background-animation" id="bg-anim"></div>
+
+    <!-- Pantalla Inicial -->
+    <div id="start-screen">
+        <button class="pulse-btn" onclick="startExperience()">Tienes un mensaje especial 💌</button>
+    </div>
+
+    <!-- Pantalla de Interacción -->
+    <div id="chat-screen">
+        <div class="character-container">
+            <!-- Aquí puedes poner la imagen que generaste cambiando este div por un <img src="tu-imagen.png" width="100"> -->
+            <div class="character-img">🐟🎀🐱</div>
+            <h3 style="margin: 10px 0 0 0; color: #ff5277;">Kitty Fish</h3>
+        </div>
+        <div class="chat-box" id="chat-box">
+            <div class="typing" id="typing-indicator">Escribiendo...</div>
+        </div>
+    </div>
+
+    <script>
+        // Generar burbujas de fondo
+        const bgAnim = document.getElementById('bg-anim');
+        for(let i=0; i<15; i++) {
+            let bubble = document.createElement('div');
+            bubble.classList.add('bubble');
+            bubble.style.width = Math.random() * 20 + 10 + 'px';
+            bubble.style.height = bubble.style.width;
+            bubble.style.left = Math.random() * 100 + 'vw';
+            bubble.style.animationDuration = Math.random() * 3 + 4 + 's';
+            bubble.style.animationDelay = Math.random() * 2 + 's';
+            bgAnim.appendChild(bubble);
+        }
+
+        // Base de datos de mensajes (Portugués y Francés alternados)
+        const messages = [
+            "Eu te amo! 💖",
+            "Je t'aime! 🌹",
+            "Você é muito especial para mim. ✨",
+            "Tu me manques. 🥺",
+            "Meu coração é seu. 💝",
+            "Mon amour. 🥰",
+            "Gosto muito de você! 🎀",
+            "Tu es tout pour moi. 💫"
+        ];
+
+        let msgIndex = 0;
+        const chatBox = document.getElementById('chat-box');
+        const typingIndicator = document.getElementById('typing-indicator');
+
+        function startExperience() {
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('chat-screen').style.display = 'flex';
+            setTimeout(sendNextMessage, 1000);
+        }
+
+        function sendNextMessage() {
+            // Mostrar "escribiendo..."
+            typingIndicator.style.display = 'block';
+            chatBox.appendChild(typingIndicator); // Mover al final
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Esperar 1.5 a 2 segundos para simular escritura
+            setTimeout(() => {
+                typingIndicator.style.display = 'none';
+                
+                // Crear y mostrar mensaje
+                let msgDiv = document.createElement('div');
+                msgDiv.classList.add('message');
+                msgDiv.innerText = messages[msgIndex];
+                chatBox.appendChild(msgDiv);
+                chatBox.scrollTop = chatBox.scrollHeight;
+
+                // Avanzar índice y volver a llamar la función en bucle
+                msgIndex = (msgIndex + 1) % messages.length;
+                setTimeout(sendNextMessage, 2500); // Tiempo entre mensajes
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
