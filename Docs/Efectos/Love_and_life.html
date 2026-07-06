@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>¿Quieres ser mi novia? 💚💙🧡</title>
+  <style>
+    :root{
+      --bg: #000;
+      --green: #00ff9d;
+      --celeste: #00d2ff;
+      --orange: #ff8c00;
+      --white: #ffffff;
+      --glow: 0 0 20px rgba(0,210,255,.55), 0 0 40px rgba(255,140,0,.35), 0 0 60px rgba(0,255,157,.25);
+    }
+    *{box-sizing:border-box; margin:0; padding:0;}
+    html,body{height:100%; overflow-x:hidden;}
+    body{
+      background: var(--bg); color: var(--white); 
+      font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    /* Partículas al fondo */
+    canvas#particles{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      z-index:0;
+    }
+
+    /* Neblina degradada sutil */
+    .aurora{
+      position:fixed;
+      top:-20vmax;
+      left:-20vmax;
+      right:-20vmax;
+      bottom:-20vmax;
+      z-index:0;
+      filter: blur(80px);
+      opacity:.25;
+      pointer-events:none;
+      background:
+        radial-gradient(50% 50% at 20% 30%, rgba(0,210,255,.8), transparent 60%),
+        radial-gradient(50% 50% at 80% 20%, rgba(255,140,0,.7), transparent 60%),
+        radial-gradient(50% 50% at 50% 80%, rgba(0,255,157,.7), transparent 60%);
+      animation: floatAurora 20s ease-in-out infinite alternate;
+    }
+    @keyframes floatAurora{
+      from{transform:translateY(-2%)}
+      to{transform:translateY(2%)}
+    }
+
+    /* Contenido principal */
+    .wrap{
+      position:relative;
+      z-index:5;
+      width: 100%;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:20px;
+    }
+
+    .card{
+      width: 100%;
+      max-width: 700px;
+      border-radius:28px;
+      padding: 2rem 1.5rem;
+      backdrop-filter: blur(10px) saturate(120%);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.15);
+      box-shadow: var(--glow);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .title{
+      margin:0 0 1rem 0;
+      font-size: clamp(2rem, 8vw, 4rem);
+      line-height:1.1;
+      font-weight:800;
+      letter-spacing:.5px;
+      text-align:center;
+      background: conic-gradient(from 0deg, var(--celeste), var(--orange), var(--green), var(--celeste));
+      background-size: 200% 200%;
+      -webkit-background-clip:text; 
+      background-clip:text; 
+      color:transparent;
+      animation: hue 8s linear infinite;
+      text-shadow: 0 0 6px rgba(255,255,255,.05);
+    }
+    @keyframes hue { 
+      0%{background-position:0% 50%} 
+      100%{background-position:200% 50%} 
+    }
+
+    .subtitle{ 
+      text-align:center; 
+      opacity:.9; 
+      font-size: clamp(1rem, 4vw, 1.4rem); 
+      margin:0 0 2rem; 
+      line-height: 1.5;
+      padding: 0 10px;
+    }
+
+    .buttons{
+      display:flex; 
+      gap:1rem; 
+      justify-content:center; 
+      flex-wrap:wrap; 
+      margin-top:1.5rem;
+      position:relative;
+    }
+    .btn{
+      --c1: var(--celeste);
+      --c2: var(--orange);
+      position:relative;
+      border:none; 
+      outline:none; 
+      cursor:pointer;
+      padding: 1rem 1.8rem;
+      font-size: 1.1rem;
+      font-weight:700;
+      color:#000; 
+      border-radius:999px;
+      background: linear-gradient(90deg, var(--c1), var(--c2));
+      box-shadow: 0 8px 24px rgba(0,210,255,.25), 0 4px 12px rgba(255,140,0,.25);
+      transition: transform .15s ease, box-shadow .2s ease, filter .2s ease;
+      z-index: 10;
+      min-width: 140px;
+    }
+    .btn:hover{ 
+      transform: translateY(-2px) scale(1.03); 
+      filter: brightness(1.08); 
+    }
+    .btn:active{ 
+      transform: translateY(1px) scale(.98); 
+    }
+    .btn.alt{ 
+      --c1: var(--green); 
+      --c2: var(--celeste); 
+    }
+    .btn.no{
+      --c1: #ff4757;
+      --c2: #ff6b81;
+      position: absolute;
+      transition: all 0.3s ease;
+    }
+
+    /* Emojis flotando (corazones, besos, nubes) */
+    .floaters{
+      position:fixed; 
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      pointer-events:none; 
+      z-index:2; 
+      overflow:hidden;
+    }
+    .floater{
+      position:absolute; 
+      font-size: clamp(18px, 4vw, 28px); 
+      opacity:.9; 
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,.35)); 
+      animation: drift var(--dur) linear infinite;
+    }
+    .floater.cloud{ 
+      font-size: clamp(28px, 6vw, 48px); 
+      opacity:.4; 
+    }
+    @keyframes drift{
+      from{ transform: translateY(110vh) translateX(var(--x)) rotate(0deg); }
+      to{   transform: translateY(-20vh) translateX(calc(var(--x) + var(--sway))) rotate(360deg); }
+    }
+
+    /* Frases románticas */
+    .frases-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 15;
+      overflow: hidden;
+    }
+    
+    .frase {
+      position: absolute;
+      font-size: clamp(1rem, 3vw, 1.5rem);
+      font-weight: 600;
+      text-align: center;
+      color: white;
+      text-shadow: 0 0 10px rgba(255, 105, 180, 0.8);
+      opacity: 0;
+      animation: caer 8s linear forwards;
+      padding: 8px 16px;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(5px);
+      max-width: 90vw;
+      word-wrap: break-word;
+    }
+    
+    @keyframes caer {
+      0% {
+        transform: translateY(-50px) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 0.9;
+      }
+      100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* Mensaje de confirmación flotante */
+    .toast{
+      position:fixed; 
+      bottom: 5vh;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      width: 90%;
+      max-width: 400px;
+      padding: 1rem 1.5rem;
+      border-radius:999px; 
+      background:rgba(0,0,0,.6); 
+      color:#fff; 
+      z-index:20; 
+      font-weight:700; 
+      letter-spacing:.3px;
+      border:1px solid rgba(255,255,255,.2); 
+      backdrop-filter: blur(8px);
+      text-align: center;
+      opacity:0; 
+      transition: all .35s ease;
+    }
+    .toast.show{ 
+      transform: translateX(-50%) translateY(0); 
+      opacity:1; 
+    }
+
+    /* Decoración con bordes neón */
+    .card::before, .card::after{
+      content:""; 
+      position:absolute; 
+      top: -150%;
+      left: -150%;
+      right: -150%;
+      bottom: -150%;
+      z-index:-1; 
+      background: conic-gradient(from 0deg, transparent 40%, rgba(0,210,255,.5), rgba(0,255,157,.5), rgba(255,140,0,.5), transparent 60%);
+      animation: spin 14s linear infinite; 
+      filter: blur(60px); 
+      opacity:.35;
+    }
+    .card::after{ 
+      animation-duration: 22s; 
+      opacity:.25; 
+    }
+    @keyframes spin{ 
+      to{ transform: rotate(1turn); } 
+    }
+
+    /* Créditos sutiles */
+    .credits{
+      position:fixed; 
+      right:12px; 
+      bottom:8px; 
+      opacity:.55; 
+      font-size:12px; 
+      z-index:4;
+      text-align: right;
+      padding: 0 10px;
+    }
+    .credits a{
+      color:#a5f3fc; 
+      text-decoration:none;
+    }
+
+    /* Media queries para responsividad adicional */
+    @media (max-width: 768px) {
+      .card {
+        padding: 1.5rem 1rem;
+        border-radius: 20px;
+      }
+      
+      .title {
+        font-size: clamp(1.8rem, 10vw, 3.5rem);
+        margin-bottom: 0.8rem;
+      }
+      
+      .subtitle {
+        font-size: clamp(0.9rem, 4vw, 1.2rem);
+        margin-bottom: 1.5rem;
+      }
+      
+      .btn {
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+        min-width: 120px;
+      }
+      
+      .buttons {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.8rem;
+      }
+      
+      .btn.no {
+        position: relative;
+        margin-top: 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 15px;
+      }
+      
+      .card {
+        padding: 1.2rem 0.8rem;
+        border-radius: 16px;
+      }
+      
+      .title {
+        font-size: clamp(1.6rem, 12vw, 2.8rem);
+      }
+      
+      .subtitle {
+        font-size: clamp(0.85rem, 4.5vw, 1.1rem);
+        margin-bottom: 1.2rem;
+      }
+      
+      .btn {
+        padding: 0.7rem 1.2rem;
+        font-size: 0.95rem;
+        min-width: 110px;
+      }
+      
+      .toast {
+        font-size: 0.9rem;
+        padding: 0.8rem 1.2rem;
+        width: 95%;
+      }
+    }
+
+    /* Soporte para orientación landscape en móviles */
+    @media (max-height: 500px) and (orientation: landscape) {
+      .wrap {
+        padding: 5px;
+      }
+      
+      .card {
+        padding: 1rem 0.8rem;
+      }
+      
+      .title {
+        margin-bottom: 0.5rem;
+        font-size: 2rem;
+      }
+      
+      .subtitle {
+        margin-bottom: 0.8rem;
+        font-size: 0.9rem;
+      }
+      
+      .buttons {
+        margin-top: 0.8rem;
+        flex-direction: row;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="particles"></canvas>
+  <div class="aurora" aria-hidden="true"></div>
+
+  <!-- Emoji flotantes (corazones, besos, nubes) generados por JS también -->
+  <div class="floaters" id="floaters"></div>
+  
+  <!-- Contenedor para frases románticas -->
+  <div class="frases-container" id="frases-container"></div>
+
+  <div class="wrap">
+    <div class="card">
+      <h1 class="title">¿Quieres ser mi novia?</h1>
+      <p class="subtitle">Prometo hacerte reír, cuidarte, y recordarte cada día lo especial que eres. 💚💙🧡</p>
+      <div class="buttons" id="buttons-container">
+        <button class="btn" id="btn-si">¡Sí!</button>
+        <button class="btn no" id="btn-no">No</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">💖 ¡Sabía que dirías que sí! 💫</div>
+  <div class="credits">Hecho con 💚💙🧡 por ti</div>
+
+  <script>
+    // ====== Config de Partículas ======
+    const cfg = {
+      count: 140,
+      linkDist: 95,
+      speed: .45,
+      colors: [
+        'rgba(0,255,157,0.9)', // verde
+        'rgba(0,210,255,0.9)', // celeste
+        'rgba(255,140,0,0.9)'  // naranja
+      ]
+    };
+
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    let W, H, particles = [], mouse = {x:null,y:null};
+
+    function resize(){ 
+      W = canvas.width = window.innerWidth; 
+      H = canvas.height = window.innerHeight; 
+    }
+    window.addEventListener('resize', resize); 
+    resize();
+
+    class P{
+      constructor(){ this.reset(true); }
+      reset(init=false){
+        this.x = Math.random()*W; this.y = Math.random()*H;
+        const a = Math.random()*Math.PI*2;
+        const sp = cfg.speed + Math.random()*cfg.speed;
+        this.vx = Math.cos(a)*sp; this.vy = Math.sin(a)*sp;
+        this.r = 1 + Math.random()*1.8; this.c = cfg.colors[(Math.random()*cfg.colors.length)|0];
+        if(!init){ this.x = mouse.x ?? W/2; this.y = mouse.y ?? H/2; this.r = 2 + Math.random()*3; }
+      }
+      step(){
+        this.x += this.vx; this.y += this.vy;
+        if(this.x<0||this.x>W) this.vx*=-1; if(this.y<0||this.y>H) this.vy*=-1;
+      }
+      draw(){ ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2); ctx.fillStyle=this.c; ctx.fill(); }
+    }
+
+    function init(){ particles = Array.from({length: cfg.count}, () => new P()); }
+    init();
+
+    function drawLinks(){
+      for(let i=0;i<particles.length;i++){
+        for(let j=i+1;j<particles.length;j++){
+          const a = particles[i], b = particles[j];
+          const dx=a.x-b.x, dy=a.y-b.y, d=Math.hypot(dx,dy);
+          if(d < cfg.linkDist){
+            ctx.globalAlpha = (1 - d/cfg.linkDist) * .35;
+            const g = ctx.createLinearGradient(a.x,a.y,b.x,b.y);
+            g.addColorStop(0, 'rgba(0,210,255,0.6)');
+            g.addColorStop(1, 'rgba(255,140,0,0.6)');
+            ctx.strokeStyle = g; ctx.lineWidth = 0.6;
+            ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+            ctx.globalAlpha = 1;
+          }
+        }
+      }
+    }
+
+    function loop(){
+      ctx.clearRect(0,0,W,H);
+      particles.forEach(p=>{p.step(); p.draw();});
+      drawLinks();
+      requestAnimationFrame(loop);
+    }
+    loop();
+
+    window.addEventListener('mousemove', e=>{mouse.x=e.clientX; mouse.y=e.clientY});
+    window.addEventListener('click', ()=>{ for(let i=0;i<18;i++){ particles.push(new P()); } });
+
+    // ====== Emojis flotantes (corazones, besos, nubes) ======
+    const floaters = document.getElementById('floaters');
+    const EMOJIS = ['❤️','🧡','💚','💙','💋'];
+    const CLOUDS = ['☁️','☁️','☁️'];
+
+    function spawnFloater(content, isCloud=false){
+      const el = document.createElement('div');
+      el.className = 'floater' + (isCloud ? ' cloud':'');
+      el.textContent = content;
+      const x = (Math.random()*80 - 40).toFixed(0) + 'vw';
+      el.style.setProperty('--x', x);
+      el.style.setProperty('--sway', (Math.random()*20-10).toFixed(1)+'vw');
+      el.style.setProperty('--dur', (isCloud? 38 + Math.random()*22 : 16 + Math.random()*12) + 's');
+      el.style.left = Math.random()*100 + 'vw';
+      floaters.appendChild(el);
+      setTimeout(()=> el.remove(), (isCloud? 60000: 35000));
+    }
+
+    // Lluvia contínua
+    setInterval(()=> spawnFloater(EMOJIS[(Math.random()*EMOJIS.length)|0]), 900);
+    setInterval(()=> spawnFloater(CLOUDS[(Math.random()*CLOUDS.length)|0], true), 2600);
+
+    // ====== Explosión de corazones al decir que SÍ ======
+    function burstHearts(x, y){
+      const N = 30;
+      for(let i=0;i<N;i++){
+        const h = document.createElement('div');
+        h.textContent = EMOJIS[(Math.random()*EMOJIS.length)|0];
+        h.style.position='fixed'; 
+        h.style.zIndex=30; 
+        h.style.left=x+'px'; 
+        h.style.top=y+'px';
+        h.style.fontSize = (16 + Math.random()*28) + 'px';
+        h.style.willChange='transform, opacity';
+        document.body.appendChild(h);
+        const ang = Math.random()*Math.PI*2; 
+        const sp = 2 + Math.random()*6;
+        const dx = Math.cos(ang)*sp, dy = Math.sin(ang)*sp;
+        let t=0; 
+        const life = 90 + Math.random()*40;
+        (function anim(){ 
+          t++; 
+          h.style.transform = `translate(${dx*t}px, ${dy*t - 0.05*t*t}px) rotate(${t*6}deg)`;
+          h.style.opacity = String(1 - t/life);
+          if(t<life) requestAnimationFrame(anim); else h.remove(); 
+        })();
+      }
+    }
+
+    // ====== Lluvia de frases románticas ======
+    const frases = [
+      "Eres mi sueño hecho realidad 💖",
+      "Mi corazón late por ti 💓",
+      "Eres la razón de mi sonrisa 😊",
+      "Contigo todo es mejor 🌈",
+      "Eres lo más bonito de mi vida 🌸",
+      "Mi amor por ti es infinito 💫",
+      "Eres mi persona favorita 💞",
+      "Eres mi todo 💘",
+      "Quiero pasar toda mi vida a tu lado 🌹",
+      "Eres perfecta para mí 💕",
+      "Cada día te amo más 💌",
+      "Eres mi sol en días grises ☀️",
+      "Mi corazón es tuyo 💗",
+      "Eres mi media naranja 🍊",
+      "Me haces inmensamente feliz 🦋"
+    ];
+
+    function lluviaDeFrases() {
+      const container = document.getElementById('frases-container');
+      
+      // Crear múltiples frases que caen
+      for (let i = 0; i < 20; i++) {
+        setTimeout(() => {
+          const fraseEl = document.createElement('div');
+          fraseEl.className = 'frase';
+          fraseEl.textContent = frases[Math.floor(Math.random() * frases.length)];
+          
+          // Posición horizontal aleatoria
+          const leftPos = Math.random() * 80 + 10; // Entre 10% y 90%
+          fraseEl.style.left = `${leftPos}%`;
+          
+          // Duración aleatoria
+          const duration = 5 + Math.random() * 5;
+          fraseEl.style.animationDuration = `${duration}s`;
+          
+          // Tamaño aleatorio
+          const fontSize = 1 + Math.random() * 1.5;
+          fraseEl.style.fontSize = `${fontSize}rem`;
+          
+          // Color degradado
+          const colors = ['#00d2ff', '#00ff9d', '#ff8c00', '#ff6b81', '#a5f3fc'];
+          const color1 = colors[Math.floor(Math.random() * colors.length)];
+          const color2 = colors[Math.floor(Math.random() * colors.length)];
+          fraseEl.style.background = `linear-gradient(45deg, ${color1}, ${color2})`;
+          fraseEl.style.webkitBackgroundClip = 'text';
+          fraseEl.style.backgroundClip = 'text';
+          fraseEl.style.webkitTextFillColor = 'transparent';
+          fraseEl.style.textShadow = '0 0 8px rgba(255,255,255,0.5)';
+          
+          container.appendChild(fraseEl);
+          
+          // Eliminar después de animación
+          setTimeout(() => {
+            if (fraseEl.parentNode) {
+              fraseEl.remove();
+            }
+          }, duration * 1000);
+        }, i * 300); // Espaciado entre frases
+      }
+    }
+
+    function showToast(){
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(()=> {
+        toast.classList.remove('show');
+      }, 2500);
+    }
+
+    function fireworks(){
+      // añade un puñado de partículas brillantes
+      for(let i=0;i<80;i++) particles.push(new P());
+      setTimeout(()=>{ 
+        particles.splice(0, Math.max(0, particles.length - cfg.count)); 
+      }, 2500);
+    }
+
+    function handleYesClick(e){
+      const x = (e.clientX || window.innerWidth/2), y = (e.clientY || window.innerHeight/2);
+      burstHearts(x,y); 
+      lluviaDeFrases();
+      showToast(); 
+      fireworks();
+    }
+
+    // ====== Comportamiento del botón NO ======
+    const btnNo = document.getElementById('btn-no');
+    const buttonsContainer = document.getElementById('buttons-container');
+    
+    function moveButton() {
+      const containerRect = buttonsContainer.getBoundingClientRect();
+      const maxX = containerRect.width - btnNo.offsetWidth - 20;
+      const maxY = containerRect.height - btnNo.offsetHeight - 10;
+      
+      const randomX = Math.floor(Math.random() * maxX);
+      const randomY = Math.floor(Math.random() * maxY);
+      
+      btnNo.style.left = `${randomX}px`;
+      btnNo.style.top = `${randomY}px`;
+    }
+    
+    // Mover el botón al cargar la página
+    moveButton();
+    
+    // Mover el botón cuando el cursor se acerque
+    btnNo.addEventListener('mouseover', moveButton);
+    
+    // Mover el botón cuando se intente hacer clic
+    btnNo.addEventListener('click', moveButton);
+
+    document.getElementById('btn-si').addEventListener('click', handleYesClick);
+
+    // ====== Cursor chispeante ======
+    (function sparkleCursor(){
+      let last = 0;
+      window.addEventListener('pointermove', (e)=>{
+        const now = performance.now();
+        if(now - last < 18) return; 
+        last = now;
+        const s = document.createElement('div');
+        s.textContent = '✨';
+        s.style.position='fixed'; 
+        s.style.left=e.clientX+'px'; 
+        s.style.top=e.clientY+'px';
+        s.style.zIndex=40; 
+        s.style.pointerEvents='none'; 
+        s.style.fontSize='14px';
+        s.style.filter='drop-shadow(0 0 6px rgba(255,255,255,.6))';
+        document.body.appendChild(s);
+        let t=0; 
+        const life=30;
+        (function anim(){ 
+          t++; 
+          s.style.transform=`translateY(${ -t/1.2 }px)`; 
+          s.style.opacity=String(1-t/life);
+          if(t<life) requestAnimationFrame(anim); else s.remove(); 
+        })();
+      });
+    })();
+
+    // Ajustar para dispositivos táctiles
+    if ('ontouchstart' in window) {
+      // Reducir el número de partículas en dispositivos móviles para mejorar el rendimiento
+      cfg.count = 80;
+      init();
+      
+      // Ajustar el comportamiento del botón "No" para dispositivos táctiles
+      btnNo.addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        moveButton();
+      });
+    }
+  </script>
+</body>
+</html>

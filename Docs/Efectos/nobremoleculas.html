@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>ENMANUEL - Experiencia Neón</title>
+    <style>
+        body {
+            margin: 0;
+            background: #000;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        canvas {
+            filter: blur(0.5px) contrast(1.2);
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="canvas"></canvas>
+
+<script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let particles = [];
+    let isFalling = false;
+    const text = "ENMANUEL";
+
+    // Paleta Neón Vibrante
+    const colors = ['#FF007F', '#00DFFF', '#00FF8F', '#FF00FF', '#FFCF00', '#FFFFFF'];
+
+    class Particle {
+        constructor(x, y, color) {
+            this.homeX = x;
+            this.homeY = y;
+            this.x = x + (Math.random() - 0.5) * 1000; // Aparecen dispersas
+            this.y = y + (Math.random() - 0.5) * 1000;
+            this.color = color;
+            this.size = Math.random() * 1.5 + 0.5;
+            
+            // Física de llegada
+            this.easing = Math.random() * 0.05 + 0.02;
+            
+            // Física de caída
+            this.vx = (Math.random() - 0.5) * 2;
+            this.vy = 0;
+            this.gravity = Math.random() * 0.2 + 0.1;
+            this.friction = 0.95;
+        }
+
+        draw() {
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Efecto de brillo neón (punto central blanco)
+            if (Math.random() > 0.9) {
+                ctx.fillStyle = "white";
+                ctx.fillRect(this.x, this.y, 1, 1);
+            }
+        }
+
+        update() {
+            if (!isFalling) {
+                // Ir hacia la letra (Formación)
+                this.x += (this.homeX - this.x) * this.easing;
+                this.y += (this.homeY - this.y) * this.easing;
+            } else {
+                // Caída estilo lluvia
+                this.vy += this.gravity;
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                // Un poco de "viento" aleatorio
+                this.vx += (Math.random() - 0.5) * 0.1;
+            }
+        }
+    }
+
+    function init() {
+        // Configuramos fuente para escanear
+        ctx.font = "bold 160px Arial";
+        const textWidth = ctx.measureText(text).width;
+        ctx.fillText(text, (canvas.width - textWidth) / 2, canvas.height / 2);
+        
+        // Escaneo denso de pixeles
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Saltamos de 3 en 3 pixeles para tener miles de partículas sin lag
+        for (let y = 0; y < imageData.height; y += 3) {
+            for (let x = 0; x < imageData.width; x += 3) {
+                const index = (y * imageData.width + x) * 4;
+                if (imageData.data[index + 3] > 128) {
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    particles.push(new Particle(x, y, color));
+                }
+            }
+        }
+    }
+
+    function animate() {
+        // El truco del rastro: no borramos del todo, dejamos una capa negra semitransparente
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        particles.forEach(p => {
+            p.update();
+            p.draw();
+        });
+
+        requestAnimationFrame(animate);
+    }
+
+    init();
+    animate();
+
+    // Iniciar desarmado a los 5 segundos
+    setTimeout(() => {
+        isFalling = true;
+    }, 5000);
+
+    // Ajuste de pantalla
+    window.addEventListener('resize', () => {
+        location.reload(); 
+    });
+</script>
+
+</body>
+</html>

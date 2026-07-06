@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Lluvia de Te Amo - iPhone Compatible</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Arial', sans-serif;
+            touch-action: manipulation;
+            cursor: pointer;
+            -webkit-user-select: none;
+            user-select: none;
+            perspective: 1000px;
+        }
+
+        .love-rain {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .love-word {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 20px;
+            user-select: none;
+            animation: fall linear forwards;
+            text-shadow: 0 0 5px #ff00aa;
+            will-change: transform, opacity;
+            pointer-events: none;
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) translateZ(0);
+            }
+        }
+        
+        @-webkit-keyframes fall {
+            to {
+                -webkit-transform: translateY(100vh) translateZ(0);
+            }
+        }
+
+        .i-love-you {
+            position: relative;
+            font-size: 12vw;
+            font-weight: bold;
+            color: #ff0066;
+            text-shadow: 0 0 20px #ff00aa, 
+                         0 0 40px #ff00aa, 
+                         0 0 60px #ff00aa;
+            animation: float 3s ease-in-out infinite alternate;
+            z-index: 100;
+            text-align: center;
+            padding: 10px;
+            pointer-events: none;
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+        }
+
+        @media (min-width: 768px) {
+            .i-love-you {
+                font-size: 8vw;
+            }
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotateX(0) rotateY(0);
+                text-shadow: 0 0 20px #ff00aa, 
+                             0 0 40px #ff00aa, 
+                             0 0 60px #ff00aa;
+            }
+            100% {
+                transform: translateY(-20px) rotateX(5deg) rotateY(5deg);
+                text-shadow: 0 0 30px #ff00aa, 
+                             0 0 60px #ff00aa, 
+                             0 0 90px #ff00aa;
+            }
+        }
+        
+        @-webkit-keyframes float {
+            0% {
+                -webkit-transform: translateY(0) rotateX(0) rotateY(0);
+                text-shadow: 0 0 20px #ff00aa, 
+                             0 0 40px #ff00aa, 
+                             0 0 60px #ff00aa;
+            }
+            100% {
+                -webkit-transform: translateY(-20px) rotateX(5deg) rotateY(5deg);
+                text-shadow: 0 0 30px #ff00aa, 
+                             0 0 60px #ff00aa, 
+                             0 0 90px #ff00aa;
+            }
+        }
+
+        .heart {
+            position: absolute;
+            pointer-events: none;
+            animation: explode 1s ease-out forwards;
+            will-change: transform, opacity;
+            z-index: 50;
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+        }
+
+        @keyframes explode {
+            0% {
+                transform: scale(0) translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1) translateY(-100px);
+                opacity: 0;
+            }
+        }
+        
+        @-webkit-keyframes explode {
+            0% {
+                -webkit-transform: scale(0) translateY(0);
+                opacity: 1;
+            }
+            100% {
+                -webkit-transform: scale(1) translateY(-100px);
+                opacity: 0;
+            }
+        }
+
+        .instructions {
+            position: absolute;
+            bottom: 30px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 16px;
+            text-align: center;
+            width: 100%;
+            padding: 0 20px;
+            z-index: 200;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+        
+        @-webkit-keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+
+        .status-bar {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            z-index: 300;
+        }
+    </style>
+</head>
+<body>
+    <div class="status-bar">Funcionando en iPhone ✔️</div>
+    <div class="i-love-you">I LOVE YOU</div>
+    <div class="love-rain" id="loveRain"></div>
+    <div class="instructions">Toca la pantalla para crear corazones</div>
+
+    <script>
+        // Detectar si es un dispositivo iOS
+        const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+        
+        // Crear lluvia de "Te Amo" con optimización para iOS
+        function createLoveRain() {
+            const loveRain = document.getElementById('loveRain');
+            const words = ["TE AMO", "I LOVE YOU", "❤️", "TI AMO", "JE T'AIME", "愛してる", "ICH LIEBE DICH"];
+            
+            // Ajustar para iOS: usar requestAnimationFrame en lugar de setInterval
+            let lastTime = 0;
+            const interval = isIOS ? 300 : 200;
+            
+            function rain(currentTime) {
+                if (!lastTime || currentTime - lastTime > interval) {
+                    lastTime = currentTime;
+                    
+                    const loveWord = document.createElement('div');
+                    loveWord.className = 'love-word';
+                    loveWord.textContent = words[Math.floor(Math.random() * words.length)];
+                    loveWord.style.left = Math.random() * 100 + 'vw';
+                    
+                    // Ajuste de duración de animación para iOS
+                    const duration = (Math.random() * 3 + 3);
+                    loveWord.style.animationDuration = duration + 's';
+                    loveWord.style.animationName = 'fall';
+                    loveWord.style.webkitAnimationName = 'fall';
+                    
+                    loveWord.style.opacity = Math.random() * 0.5 + 0.5;
+                    loveWord.style.fontSize = (Math.random() * 10 + 18) + 'px';
+                    
+                    loveRain.appendChild(loveWord);
+                    
+                    // Eliminar después de animación
+                    setTimeout(() => {
+                        if (loveWord.parentNode === loveRain) {
+                            loveRain.removeChild(loveWord);
+                        }
+                    }, duration * 1000);
+                }
+                
+                requestAnimationFrame(rain);
+            }
+            
+            requestAnimationFrame(rain);
+        }
+
+        // Crear efecto de corazones explosivos con optimización para iOS
+        function createHearts(x, y) {
+            const colors = ['#ff0066', '#ff00aa', '#ff33cc', '#ff66cc', '#ff99cc'];
+            const heartCount = isIOS ? 15 : 25;
+            
+            for (let i = 0; i < heartCount; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = '❤️';
+                heart.style.left = x + 'px';
+                heart.style.top = y + 'px';
+                heart.style.fontSize = (Math.random() * 20 + 12) + 'px';
+                heart.style.color = colors[Math.floor(Math.random() * colors.length)];
+                heart.style.animationDuration = (Math.random() * 0.5 + 0.5) + 's';
+                heart.style.animationName = 'explode';
+                heart.style.webkitAnimationName = 'explode';
+                
+                document.body.appendChild(heart);
+                
+                // Eliminar después de animación
+                setTimeout(() => {
+                    if (heart.parentNode === document.body) {
+                        document.body.removeChild(heart);
+                    }
+                }, 1000);
+            }
+        }
+
+        // Prevenir el comportamiento por defecto de gestos táctiles en iOS
+        function preventTouchDefault() {
+            document.addEventListener('touchmove', function(e) {
+                e.preventDefault();
+            }, { passive: false });
+            
+            document.addEventListener('gesturestart', function(e) {
+                e.preventDefault();
+            });
+        }
+
+        // Inicializar efectos
+        window.addEventListener('load', () => {
+            createLoveRain();
+            preventTouchDefault();
+            
+            // Manejar eventos táctiles
+            document.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                createHearts(e.touches[0].clientX, e.touches[0].clientY);
+            }, { passive: false });
+            
+            // Manejar eventos de ratón
+            document.addEventListener('click', (e) => {
+                createHearts(e.clientX, e.clientY);
+            });
+        });
+
+        // Actualizar estado para iPhone
+        if (isIOS) {
+            document.querySelector('.status-bar').textContent = "Funcionando en iPhone ✔️";
+        }
+    </script>
+</body>
+</html>

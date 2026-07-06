@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Colección Especial 🌸 | G&Z Workspace</title>
+    <!-- Google Fonts: Nunito, Dancing Script, Playfair Display -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,800;1,500&display=swap" rel="stylesheet">
+    <style>
+        /* =============================================
+           GLOBAL DESIGN SYSTEM (DARK MODE BENTO GRID)
+           ============================================= */
+        :root {
+            --bg-dark:       #060608;
+            --bg-card:       rgba(15, 15, 20, 0.7);
+            --border-card:   rgba(255, 255, 255, 0.06);
+            --text-white:    #f3f4f6;
+            --text-gray:     #9ca3af;
+            --pink-accent:   #ff80ab;
+            --pink-glow:     rgba(255, 128, 171, 0.3);
+            --gold-accent:   #d4af37;
+            --gold-glow:     rgba(212, 175, 55, 0.2);
+            --purple-accent: #9d4edd;
+            --purple-glow:   rgba(157, 78, 221, 0.2);
+            --blue-accent:   #00b0ff;
+            --blue-glow:     rgba(0, 176, 255, 0.2);
+            --font-main:    'Nunito', sans-serif;
+            --font-cursive: 'Dancing Script', cursive;
+            --font-luxury:  'Playfair Display', serif;
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            font-family: var(--font-main);
+            background-color: var(--bg-dark);
+            color: var(--text-white);
+        }
+
+        /* Animated glowing background blobs */
+        .ambient-blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.18;
+            animation: pulseBlob 15s ease-in-out infinite alternate;
+        }
+        .blob-1 {
+            width: 400px;
+            height: 400px;
+            background: #ff4081;
+            top: -10%;
+            left: -5%;
+        }
+        .blob-2 {
+            width: 450px;
+            height: 450px;
+            background: #7b1fa2;
+            bottom: -15%;
+            right: -5%;
+            animation-duration: 20s;
+        }
+        .blob-3 {
+            width: 350px;
+            height: 350px;
+            background: #3f51b5;
+            top: 40%;
+            left: 55%;
+            animation-duration: 18s;
+        }
+
+        @keyframes pulseBlob {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(45px, -35px) scale(1.15); }
+            100% { transform: translate(-25px, 25px) scale(0.9); }
+        }
+
+        /* Hub Container */
+        .hub-container {
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 2.5rem 1.5rem;
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            min-height: 100vh;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        /* Glassmorphic Navbar */
+        nav.hub-navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 50px;
+            padding: 0.8rem 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: slideInDown 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .nav-logo {
+            font-family: var(--font-cursive);
+            font-size: 1.8rem;
+            color: var(--pink-accent);
+            text-shadow: 0 0 12px var(--pink-glow);
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-link-item {
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: var(--text-gray);
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        .nav-link-item:hover {
+            color: var(--text-white);
+        }
+
+        /* Header block */
+        header.hub-header {
+            text-align: center;
+            margin-top: 1rem;
+            animation: fadeIn 1s ease-out;
+        }
+        .hub-title {
+            font-family: var(--font-cursive);
+            font-size: clamp(2.5rem, 8vw, 4.2rem);
+            color: #ffffff;
+            line-height: 1.2;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #ffffff 40%, #ff80ab 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hub-subtitle {
+            font-size: clamp(0.85rem, 2.5vw, 1.05rem);
+            color: var(--text-gray);
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* Bento Grid Layout */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            width: 100%;
+            margin-top: 1rem;
+            animation: fadeInUp 1s cubic-bezier(0.25, 1, 0.5, 1) 0.2s backwards;
+        }
+
+        /* Individual Bento Card */
+        .bento-card {
+            background-color: var(--bg-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-card);
+            border-radius: 24px;
+            padding: 1.8rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 250px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Hover states */
+        .bento-card:hover {
+            transform: translateY(-6px);
+            background-color: rgba(22, 22, 30, 0.85);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Highlights & Glows */
+        .card-aquarium {
+            grid-column: span 2;
+            border-color: rgba(255, 128, 171, 0.2);
+            background: linear-gradient(135deg, rgba(255, 128, 171, 0.04) 0%, rgba(15, 15, 20, 0.75) 100%);
+        }
+        .card-aquarium:hover {
+            border-color: var(--pink-accent);
+            box-shadow: 0 15px 35px var(--pink-glow);
+        }
+
+        .card-flowers {
+            grid-column: span 1;
+            border-color: rgba(212, 175, 55, 0.2);
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.04) 0%, rgba(15, 15, 20, 0.75) 100%);
+        }
+        .card-flowers:hover {
+            border-color: var(--gold-accent);
+            box-shadow: 0 15px 35px var(--gold-glow);
+        }
+
+        .card-galaxy:hover {
+            border-color: var(--purple-accent);
+            box-shadow: 0 15px 35px var(--purple-glow);
+        }
+
+        .card-butterflies:hover {
+            border-color: var(--blue-accent);
+            box-shadow: 0 15px 35px var(--blue-glow);
+        }
+
+        .card-universe:hover {
+            border-color: #6366f1;
+            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.25);
+        }
+
+        .card-heart3d:hover {
+            border-color: #ec4899;
+            box-shadow: 0 15px 35px rgba(236, 72, 153, 0.25);
+        }
+
+        .card-ghosts:hover {
+            border-color: #a855f7;
+            box-shadow: 0 15px 35px rgba(168, 85, 247, 0.25);
+        }
+
+        .card-beats:hover {
+            border-color: #ef4444;
+            box-shadow: 0 15px 35px rgba(239, 68, 68, 0.25);
+        }
+
+        /* Bento Inner Elements */
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .card-icon {
+            font-size: 2.2rem;
+        }
+        .card-badge {
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            letter-spacing: 0.5px;
+            color: var(--text-white);
+        }
+        .card-aquarium .card-badge {
+            background: linear-gradient(135deg, #ff80ab, #e91e8c);
+            border: none;
+            box-shadow: 0 4px 12px var(--pink-glow);
+        }
+        .card-flowers .card-badge {
+            background: rgba(212, 175, 55, 0.15);
+            border-color: var(--gold-accent);
+            color: var(--gold-accent);
+        }
+
+        .card-bottom {
+            margin-top: 3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+        }
+        .card-aquarium .card-title {
+            font-family: var(--font-cursive);
+            font-size: 1.9rem;
+            color: var(--pink-accent);
+        }
+        .card-desc {
+            font-size: 0.85rem;
+            color: var(--text-gray);
+            line-height: 1.55;
+        }
+
+        /* SVG Bow fish teaser inside featured card */
+        .card-gift-fish {
+            position: absolute;
+            right: 25px;
+            top: 25px;
+            width: 120px;
+            height: 120px;
+            pointer-events: none;
+            transform: rotate(-8deg);
+            transition: all 0.4s ease;
+            opacity: 0.8;
+        }
+        .card-aquarium:hover .card-gift-fish {
+            transform: scale(1.12) rotate(4deg);
+            opacity: 1;
+        }
+
+        /* Footer */
+        footer.hub-footer {
+            margin-top: auto;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-gray);
+            padding: 2rem 0;
+            letter-spacing: 0.5px;
+        }
+
+        /* =============================================
+           FULL-SCREEN MODAL LAYOUT & TRANSITIONS
+           ============================================= */
+        .project-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.96);
+            transition: opacity 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+                        transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            background-color: var(--bg-dark);
+            overflow: hidden;
+            display: none;
+        }
+
+        .project-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1);
+        }
+
+        /* Custom Back Button */
+        .btn-back-hub {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 2000;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1.5px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: var(--text-white);
+            font-weight: 800;
+            font-size: 0.85rem;
+            font-family: var(--font-main);
+            padding: 10px 22px;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.25);
+        }
+        .btn-back-hub:hover {
+            transform: scale(1.05) translateX(3px);
+            background: rgba(255, 255, 255, 0.16);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Iframe styling */
+        .project-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            outline: none;
+            background: transparent;
+        }
+
+        /* Animations keyframes */
+        @keyframes slideInDown {
+            0% { transform: translateY(-40px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        @keyframes fadeInUp {
+            0% { transform: translateY(30px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Media adjustments */
+        @media (max-width: 850px) {
+            .bento-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .card-aquarium {
+                grid-column: span 2;
+            }
+        }
+        @media (max-width: 580px) {
+            .bento-grid {
+                grid-template-columns: 1fr;
+            }
+            .card-aquarium {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ambient colors -->
+    <div class="ambient-blob blob-1"></div>
+    <div class="ambient-blob blob-2"></div>
+    <div class="ambient-blob blob-3"></div>
+
+    <!-- =============================================
+         THE MAIN BENTO GRID DASHBOARD
+         ============================================= -->
+    <div class="hub-container" id="hub-view">
+        <nav class="hub-navbar">
+            <div class="nav-logo">G&Z Colección 🌸</div>
+            <div class="nav-links">
+                <span class="nav-link-item" onclick="alert('Hecho con todo el amor de mi parte 💖')">Detalles</span>
+            </div>
+        </nav>
+
+        <header class="hub-header">
+            <h1 class="hub-title">Colección Especial</h1>
+            <p class="hub-subtitle">Diseños Interactivos & Mensajes Especiales 💫</p>
+        </header>
+
+        <!-- GRID SYSTEM -->
+        <main class="bento-grid">
+            
+            <!-- Card 1: El Regalo Especial (Espero te guste) -->
+            <article class="bento-card card-aquarium" onclick="openProject('./Efectos/Espero_te_guste.html')">
+                <div class="card-top">
+                    <span class="card-icon">🐟</span>
+                    <span class="card-badge">Especial · Privado 🎀</span>
+                </div>
+                <!-- Teaser bow fish SVG -->
+                <svg class="card-gift-fish" viewBox="0 0 160 140">
+                    <linearGradient id="grad-fin-teaser" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#ff80ab" />
+                        <stop offset="100%" stop-color="#e91e8c" />
+                    </linearGradient>
+                    <path d="M100,60 C125,25 150,15 155,45 C145,70 155,95 155,100 C140,120 120,110 100,80 Z" fill="url(#grad-fin-teaser)" stroke="#fff" stroke-width="1.5"/>
+                    <ellipse cx="65" cy="70" rx="45" ry="42" fill="url(#grad-fin-teaser)" stroke="#fff" stroke-width="2.5" />
+                    <ellipse cx="66" cy="74" rx="32" ry="28" fill="#ffffff" stroke="#ff80ab" stroke-width="2" />
+                    <ellipse cx="52" cy="70" rx="4" ry="6" fill="#ff80ab" />
+                    <ellipse cx="80" cy="70" rx="4" ry="6" fill="#ff80ab" />
+                    <ellipse cx="66" cy="77" rx="4" ry="2.6" fill="#ffd54f" />
+                    <path d="M58,84 Q62,89 66,84 Q70,89 74,84" fill="none" stroke="#e91e8c" stroke-width="2" />
+                    <path d="M30,38 L15,18 L38,28 Z" fill="url(#grad-fin-teaser)" stroke="#fff" stroke-width="2" />
+                    <g transform="translate(32, 22)">
+                        <ellipse cx="-8" cy="0" rx="8" ry="6" fill="#ff3d00" />
+                        <ellipse cx="8" cy="0" rx="8" ry="6" fill="#ff3d00" />
+                        <circle cx="0" cy="0" r="4.5" fill="#ffd54f" />
+                    </g>
+                </svg>
+                <div class="card-bottom">
+                    <h2 class="card-title">Un Detalle Lindo Para Ti 🌸</h2>
+                    <p class="card-desc" style="max-width: 68%;">Una pecera virtual interactiva de Hello Kitty. Aliméntame, acaríciame y descubre mis mensajes especiales en francés y portugués.</p>
+                </div>
+            </article>
+
+            <!-- Card 2: Flores Amarillas -->
+            <article class="bento-card card-flowers" onclick="openProject('./Efectos/floresamarillas_023.html')">
+                <div class="card-top">
+                    <span class="card-icon">🌻</span>
+                    <span class="card-badge">Especial ⚜️</span>
+                </div>
+                <div class="card-bottom">
+                    <h2 class="card-title">Flores Amarillas</h2>
+                    <p class="card-desc">Girasoles y flores doradas animadas que florecen en pantalla con hermosos destellos de luz.</p>
+                </div>
+            </article>
+
+            <!-- Card 3: Universo Romántico -->
+            <article class="bento-card card-universe" onclick="openProject('./Efectos/universo_romantico.html')">
+                <div class="card-top">
+                    <span class="card-icon">✨</span>
+                    <span class="card-badge">Efecto</span>
+                </div>
+                <div class="card-bottom">
+                    <h2 class="card-title">Universo Romántico</h2>
+                    <p class="card-desc">Mensajes flotantes que viajan a través de una constelación de estrellas y galaxias animadas.</p>
+                </div>
+            </article>
+
+            <!-- Card 4: Corazón en 3D -->
+            <article class="bento-card card-heart3d" onclick="openProject('./Efectos/3D_I_LOVE_YOU.html')">
+                <div class="card-top">
+                    <span class="card-icon">💖</span>
+                    <span class="card-badge">Interactivos</span>
+                </div>
+                <div class="card-bottom">
+                    <h2 class="card-title">Mensaje de Amor 3D</h2>
+                    <p class="card-desc">Un impresionante corazón giratorio tridimensional que flota en pantalla.</p>
+                </div>
+            </article>
+
+            <!-- Card 5: Fantasmas Románticos -->
+            <article class="bento-card card-ghosts" onclick="openProject('./Efectos/fantasmas romanticos.html')">
+                <div class="card-top">
+                    <span class="card-icon">👻</span>
+                    <span class="card-badge">Divertido</span>
+                </div>
+                <div class="card-bottom">
+                    <h2 class="card-title">Fantasmas Románticos</h2>
+                    <p class="card-desc">Tiernos fantasmitas flotando en un ambiente acogedor, expresando cariño.</p>
+                </div>
+            </article>
+
+            <!-- Card 6: Frases y Latidos -->
+            <article class="bento-card card-beats" onclick="openProject('./Efectos/Frases_de_Amor_Latidos.html')">
+                <div class="card-top">
+                    <span class="card-icon">💓</span>
+                    <span class="card-badge">Animado</span>
+                </div>
+                <div class="card-bottom">
+                    <h2 class="card-title">Frases y Latidos</h2>
+                    <p class="card-desc">Un corazón que late al ritmo del amor mientras giran frases tiernas a su alrededor.</p>
+                </div>
+            </article>
+
+            <!-- Card 7: Mariposas de Primavera -->
+            <article class="bento-card card-butterflies" onclick="openProject('./Efectos/MariposasFEF.html')">
+                <div class="card-top">
+                    <span class="card-icon">🦋</span>
+                    <span class="card-badge">Lluvia</span>
+                </div>
+                <div class="card-bottom">
+                    <h2 class="card-title">Mariposas en Pantalla</h2>
+                    <p class="card-desc">Una lluvia constante de coloridas mariposas que vuelan suavemente por la pantalla.</p>
+                </div>
+            </article>
+
+            <!-- Card 8: Galaxia de Amor -->
+            <article class="bento-card card-galaxy" onclick="openProject('./Efectos/Efecto_Galaxia.html')">
+                <div class="card-top">
+                    <span class="card-icon">🌌</span>
+                    <span class="card-badge">Visual</span>
+                </div>
+                <div class="card-bottom">
+                    <h2 class="card-title">Efecto Galaxia</h2>
+                    <p class="card-desc">Corazones cósmicos y estrellas fugaces flotando en el espacio profundo.</p>
+                </div>
+            </article>
+
+        </main>
+
+        <footer class="hub-footer">
+            Hecho con amor y dedicación &copy; 2026 G&Z Dev
+        </footer>
+    </div>
+
+    <!-- =============================================
+         MODAL LAUNCHER CONTAINER (IFRAME)
+         ============================================= -->
+    <div id="modal-launcher" class="project-modal">
+        <button class="btn-back-hub" onclick="closeProject()">✕ Volver al Hub</button>
+        <iframe id="project-iframe" class="project-iframe" src="" frameborder="0"></iframe>
+    </div>
+
+    <!-- =============================================
+         HUB SPA JAVASCRIPT CONTROLLER
+         ============================================= -->
+    <script>
+        const hubView = document.getElementById('hub-view');
+        const modalLauncher = document.getElementById('modal-launcher');
+        const projectIframe = document.getElementById('project-iframe');
+
+        function openProject(url) {
+            // Smoothly slide out Bento Grid Hub
+            hubView.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+            hubView.style.opacity = '0';
+            hubView.style.transform = 'scale(0.97)';
+
+            setTimeout(() => {
+                hubView.style.display = 'none';
+                
+                // Show modal launcher
+                modalLauncher.style.display = 'block';
+                // Trigger transition layout reflow
+                modalLauncher.offsetHeight;
+                
+                // Set iframe target and make modal active
+                projectIframe.src = url;
+                modalLauncher.classList.add('active');
+            }, 300);
+        }
+
+        function closeProject() {
+            // Remove active transition class
+            modalLauncher.classList.remove('active');
+            
+            setTimeout(() => {
+                modalLauncher.style.display = 'none';
+                // Clear iframe source to release resources, sounds, loops of inner page
+                projectIframe.src = '';
+                
+                // Restore Bento Grid Hub view
+                hubView.style.display = 'flex';
+                hubView.offsetHeight;
+                hubView.style.opacity = '1';
+                hubView.style.transform = 'scale(1)';
+            }, 450);
+        }
+    </script>
+</body>
+</html>

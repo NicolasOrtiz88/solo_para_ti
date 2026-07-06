@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>FRANCISCO - Kinetic Power</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+
+<style>
+  html, body { margin: 0; padding: 0; overflow: hidden; background: black; }
+  canvas { display: block; }
+  video { display: none; }
+  
+  .hud {
+    position: absolute; color: #00f2ff; font-family: 'Courier New', monospace;
+    text-shadow: 0 0 10px #00f2ff; pointer-events: none; z-index: 10;
+    text-transform: uppercase; font-size: 13px;
+  }
+</style>
+</head>
+<body>
+
+<div class="hud" style="top:20px; left:20px; border-left: 3px solid #00f2ff; padding-left: 10px;">
+  USER: FRANCISCO<br>
+  SYSTEM: <span id="sys-status">SCANNING...</span><br>
+  POWER_LEVEL: <span id="pwr-level">0%</span>
+</div>
+
+<div class="hud" style="bottom:20px; right:20px; text-align: right;">
+  MODE: KINETIC_DISTORTION<br>
+  LATENCY: 14ms<br>
+  <span style="color:rgba(0,242,255,0.5)">CORE_v4.2</span>
+</div>
+
+<script>
+let capture;
+let handX = 0, handY = 0;
+let indexX = 0, indexY = 0;
+let isFist = false;
+let particles = [];
+let textPoints = [];
+let font;
+
+// Configuración MediaPipe
+const hands = new Hands({
+  locateFile: f => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${f}`
+});
+
+hands.setOptions({
+  maxNumHands: 1,
+  modelComplexity: 1, // Más preciso para distorsión
+  minDetectionConfidence: 0.7,
+  minTrackingConfidence: 0.7
+});
+
+hands.onResults(res => {
+  if (res.multiHandLandmarks && res.multiHandLandmarks.length > 0) {
+    document.getElementById('sys-status').innerText = "LINKED";
+    document.getElementById('sys-status').style.color = "#0f0";
+    
+    const lm = res.multiHandLandmarks[0];
+    
+    // Punto de la palma (Centro de poder)
+    handX = (1 - lm[9].x) * width; 
+    handY = lm[9].y * height;
+    
+    // Punta del índice (Distorsión)
+    indexX = (1 - lm[8].x) * width;
+    indexY = lm[8].y * height;
+
+    // Detectar puño cerrado (distancia entre pulgar y meñique)
+    let d = dist(lm[4].x, lm[4].y, lm[20].x, lm[20].y);
+    isFist = d < 0.12;
+    
+    document.getElementById('pwr-level').innerText = isFist ? "100% MAXIMUM" : "45% STABLE";
+    document.getElementById('pwr-level').style.color = isFist ? "#ff0055" : "#00f2ff";
+  }
+});
+
+function setup() {
+  createCanvas(windowWidth, windowHeight);
+  colorMode(HSB, 360, 100, 100, 100);
+
+  capture = createCapture(VIDEO);
+  capture.size(640, 480);
+  capture.hide();
+
+  const cam = new Camera(capture.elt, {
+    onFrame: async () => { await hands.send({ image: capture.elt }); },
+    width: 640, height: 480
+  });
+  cam.start();
+
+  generateTextPoints("FRANCISCO");
+  
+  // Crear 1800 partículas (balance entre fluidez y densidad)
+  for (let i = 0; i < 1800; i++) {
+    particles.push(new Particle());
+  }
+}
+
+function generateTextPoints(txt) {
+  let pg = createGraphics(width, height);
+  pg.pixelDensity(1);
+  pg.background(0);
+  pg.fill(255);
+  pg.textSize(width * 0.15);
+  pg.textAlign(CENTER, CENTER);
+  pg.text(txt, width/2, height/2);
+  pg.loadPixels();
+
+  textPoints = [];
+  for (let x = 0; x < width; x += 6) {
+    for (let y = 0; y < height; y += 6) {
+      if (pg.pixels[(x + y * width) * 4] > 128) {
+        textPoints.push(createVector(x, y));
+      }
+    }
+  }
+}
+
+function draw() {
+  // Fondo: Video con espejo
+  push();
+  translate(width, 0);
+  scale(-1, 1);
+  if (capture.loadedmetadata) image(capture, 0, 0, width, height);
+  pop();
+
+  // Capa oscura estilo HUD
+  fill(0, 0, 0, 75);
+  rect(0, 0, width, height);
+
+  // Dibujar partículas
+  particles.forEach((p, i) => {
+    let target;
+    
+    if (isFist) {
+      // MODO PODER: Todas al centro de la palma
+      target = createVector(handX + random(-20, 20), handY + random(-20, 20));
+      p.maxSpeed = 25; // Más rápidas al cerrarse
+    } else {
+      // MODO NOMBRE: Seguir los puntos de "FRANCISCO"
+      let pt = textPoints[i % textPoints.length];
+      target = createVector(pt.x, pt.y);
+      p.maxSpeed = 12;
+      
+      // EFECTO DISTORSIÓN: Si el dedo índice está cerca, repele
+      let dDist = dist(indexX, indexY, p.pos.x, p.pos.y);
+      if (dDist < 80) {
+        let pushForce = p5.Vector.sub(p.pos, createVector(indexX, indexY));
+        pushForce.setMag(5);
+        p.acc.add(pushForce);
+      }
+    }
+
+    p.arrive(target);
+    p.update();
+    p.show(isFist);
+  });
+  
+  // Efectos visuales de levitación en el dedo índice
+  if (!isFist) {
+    noFill();
+    stroke(180, 100, 100, 50);
+    ellipse(indexX, indexY, 40 + sin(frameCount*0.1)*10);
+    ellipse(indexX, indexY, 60 + cos(frameCount*0.1)*15);
+  }
+}
+
+class Particle {
+  constructor() {
+    this.pos = createVector(random(width), random(height));
+    this.vel = createVector(0, 0);
+    this.acc = createVector(0, 0);
+    this.maxSpeed = 12;
+    this.maxForce = 0.8;
+    this.hue = random(180, 220); // Tonos azules/cian
+    this.size = random(2, 4);
+  }
+
+  arrive(target) {
+    let desired = p5.Vector.sub(target, this.pos);
+    let d = desired.mag();
+    let speed = d < 100 ? map(d, 0, 100, 0, this.maxSpeed) : this.maxSpeed;
+    desired.setMag(speed);
+    let steer = p5.Vector.sub(desired, this.vel);
+    steer.limit(this.maxForce);
+    this.acc.add(steer);
+  }
+
+  update() {
+    this.vel.add(this.acc);
+    this.pos.add(this.vel);
+    this.acc.mult(0);
+    this.vel.mult(0.92);
+  }
+
+  show(fistMode) {
+    noStroke();
+    // Si es modo puño, se vuelven blancas/rosas brillantes
+    if (fistMode) {
+      fill(340, 80, 100, 90);
+      circle(this.pos.x, this.pos.y, this.size * 1.5);
+    } else {
+      fill(this.hue, 80, 100, 80);
+      circle(this.pos.x, this.pos.y, this.size);
+    }
+  }
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  generateTextPoints("FRANCISCO");
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,2102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Un Mensajito Lindo 🌸 | Pecera Virtual</title>
+    <meta name="description" content="Un detalle especial y lindo para ti 🌸">
+
+    <!-- Google Fonts: Nunito (kawaii-friendly), Dancing Script (romantic cursive) -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        /* =============================================
+           CSS CUSTOM PROPERTIES — Kawaii Pastel Palette & Glassmorphism
+        ============================================= */
+        :root {
+            --pink-lightest: #fff0f5;
+            --pink-light:    #ffd6e7;
+            --pink-mid:      #ffaecf;
+            --pink-main:     #ff80ab;
+            --pink-deep:     #e91e8c;
+            --red-accent:    #d81b60;
+            --white:         #ffffff;
+            --soft-gray:     #f7e8ef;
+            --text-dark:     #3d1a2e;
+            --text-mid:      #7a3d5a;
+            --text-light:    #c08099;
+
+            --bubble-user:   #ffffff;
+            --bubble-char:   rgba(255, 240, 245, 0.7);
+
+            --font-main:    'Nunito', sans-serif;
+            --font-cursive: 'Dancing Script', cursive;
+
+            --shadow-pink:  0 8px 32px rgba(255, 80, 171, 0.2);
+            --shadow-deep:  0 8px 40px rgba(216, 27, 96, 0.15);
+
+            --radius-lg:    28px; /* Heavy rounded corners for a soft look */
+            --radius-md:    20px;
+            --radius-sm:    14px;
+        }
+
+        /* =============================================
+           RESET & BASE
+        ============================================= */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            width: 100%;
+            height: 100%;
+            height: 100dvh; /* Dynamic Viewport Height for iOS */
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            width: 100%;
+            height: 100%;
+            height: 100dvh;
+            overflow: hidden;
+            position: fixed; /* Lock scrolling bounce on body, not html, to avoid iOS fixed bugs */
+            inset: 0;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-main);
+            background: var(--pink-lightest);
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* =============================================
+           FLOATING PARTICLES LAYER
+        ============================================= */
+        #particles-layer {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            bottom: -60px;
+            font-size: 18px;
+            opacity: 0;
+            animation: floatUp linear infinite;
+            animation-duration: var(--dur, 8s);
+            animation-delay: var(--delay, 0s);
+            will-change: transform, opacity;
+        }
+
+        @keyframes floatUp {
+            0%   { transform: translateY(0) translateX(0) scale(0.7); opacity: 0; }
+            10%  { opacity: 0.9; }
+            50%  { transform: translateY(-45vh) translateX(var(--drift)) scale(1); opacity: 0.7; }
+            90%  { opacity: 0.2; }
+            100% { transform: translateY(-105vh) translateX(calc(var(--drift) * 1.3)) scale(0.5); opacity: 0; }
+        }
+
+        /* =============================================
+           SCREEN CONTAINERS
+        ============================================= */
+        .screen {
+            position: fixed;
+            inset: 0;
+            height: 100dvh; /* Lock height dynamically on iOS Safari */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.7s cubic-bezier(0.25, 0.8, 0.25, 1),
+                        transform 0.7s cubic-bezier(0.25, 0.8, 0.25, 1);
+            z-index: 10;
+        }
+
+        .screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.95);
+        }
+
+        /* =============================================
+           SCREEN 0 — MYSTERY INTRO
+        ============================================= */
+        #screen-mystery {
+            background-color: #0d0412; /* Dark solid fallback for browsers that fail on radial-gradients */
+            background: radial-gradient(ellipse at 50% 40%, #1a0a1e 0%, #0d0412 40%, #050208 100%);
+            z-index: 50;
+            overflow: hidden;
+        }
+
+        .mystery-particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(255, 150, 200, 0.6);
+            border-radius: 50%;
+            animation: mysteryFloat linear infinite;
+            animation-duration: var(--dur, 6s);
+            animation-delay: var(--delay, 0s);
+            pointer-events: none;
+        }
+
+        @keyframes mysteryFloat {
+            0% { transform: translateY(0) scale(0); opacity: 0; }
+            15% { opacity: 1; transform: translateY(-80px) scale(1); }
+            85% { opacity: 0.6; }
+            100% { transform: translateY(-1000px) scale(0.3); opacity: 0; }
+        }
+
+        .mystery-aurora {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            animation: auroraShift 8s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        .mystery-aurora--1 { background: #e91e8c; top: 20%; left: 30%; }
+        .mystery-aurora--2 { background: #9d4edd; top: 50%; right: 20%; animation-delay: -3s; animation-duration: 10s; }
+        .mystery-aurora--3 { background: #ff80ab; bottom: 20%; left: 50%; animation-delay: -5s; animation-duration: 12s; }
+
+        @keyframes auroraShift {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.1; }
+            50% { transform: translate(30px, -20px) scale(1.3); opacity: 0.22; }
+            100% { transform: translate(-20px, 15px) scale(0.9); opacity: 0.12; }
+        }
+
+        .mystery-text-container {
+            position: relative;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: clamp(16px, 4vw, 28px);
+            padding: 0 clamp(20px, 6vw, 40px);
+        }
+
+        .mystery-line {
+            font-family: var(--font-cursive);
+            color: #ffe4e9; /* Soft sweet pink */
+            opacity: 0;
+            text-align: center;
+            transition: opacity 1.2s ease, transform 1.2s ease, text-shadow 1.2s ease;
+            transform: translateY(20px);
+            line-height: 1.4;
+        }
+
+        .mystery-line.visible {
+            opacity: 0.95;
+            transform: translateY(0);
+        }
+
+        .mystery-line--1 {
+            font-size: clamp(1rem, 3.5vw, 1.3rem);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-family: var(--font-main);
+            font-weight: 600;
+            color: rgba(255, 150, 200, 0.85);
+        }
+
+        .mystery-line--1.visible {
+            text-shadow: 0 0 20px rgba(233, 30, 140, 0.35);
+        }
+
+        .mystery-line--2 { font-size: clamp(1.6rem, 5.5vw, 2.4rem); }
+        .mystery-line--2.visible { text-shadow: 0 0 30px rgba(233, 30, 140, 0.45); }
+        .mystery-line--3 { font-size: clamp(1.2rem, 4vw, 1.8rem); }
+        .mystery-line--3.visible { text-shadow: 0 0 25px rgba(233, 30, 140, 0.35); }
+        .mystery-line--4 { 
+            font-size: clamp(0.85rem, 2.8vw, 1rem); 
+            font-family: var(--font-main); 
+            font-weight: 700; 
+            letter-spacing: 1px; 
+            color: rgba(255, 128, 171, 0.8); 
+        }
+
+        #btn-mystery {
+            position: relative;
+            background: transparent;
+            color: rgba(255, 200, 220, 0.9);
+            border: 2px solid rgba(255, 128, 171, 0.4);
+            border-radius: var(--radius-lg);
+            padding: clamp(14px, 3.5vw, 20px) clamp(36px, 9vw, 60px);
+            font-family: var(--font-main);
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
+            font-weight: 800;
+            letter-spacing: 2px;
+            cursor: pointer;
+            margin-top: clamp(20px, 5vw, 40px);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s ease 0.5s, transform 1s ease 0.5s,
+                        background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+            z-index: 10;
+            text-transform: uppercase;
+        }
+
+        #btn-mystery.visible {
+            opacity: 1;
+            transform: translateY(0);
+            animation: mysteryPulse 2.5s ease-in-out infinite;
+        }
+
+        #btn-mystery:hover {
+            background: rgba(233, 30, 140, 0.15);
+            border-color: rgba(255, 128, 171, 0.7);
+            box-shadow: 0 0 30px rgba(233, 30, 140, 0.3), 0 0 60px rgba(233, 30, 140, 0.1);
+        }
+
+        #btn-mystery:active { transform: scale(0.96) !important; }
+
+        @keyframes mysteryPulse {
+            0%, 100% { box-shadow: 0 0 15px rgba(233, 30, 140, 0.15), 0 0 0 0 rgba(233, 30, 140, 0.1); }
+            50% { box-shadow: 0 0 25px rgba(233, 30, 140, 0.3), 0 0 50px rgba(233, 30, 140, 0.15); }
+        }
+
+        #mystery-flash {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 50% 50%, #fff 0%, #ffd6e7 40%, transparent 70%);
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.15s ease;
+        }
+
+        #mystery-flash.active { opacity: 1; }
+
+        .transition-ring {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: 3px solid rgba(233, 30, 140, 0.8);
+            transform: translate(-50%, -50%) scale(0);
+            z-index: 99;
+            pointer-events: none;
+            animation: ringExpand 1.2s ease-out forwards;
+        }
+
+        @keyframes ringExpand {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 1; border-width: 4px; }
+            70% { opacity: 0.5; }
+            100% { transform: translate(-50%, -50%) scale(80); opacity: 0; border-width: 1px; }
+        }
+
+        /* =============================================
+           SCREEN 1 — INITIAL / ENVELOPE
+        ============================================= */
+        #screen-initial {
+            background: radial-gradient(ellipse at 50% 40%, #ffe4f0 0%, #ffd6e7 50%, #ffc0db 100%);
+            gap: 32px;
+        }
+
+        #screen-initial::before {
+            content: '✦ 💕 ✦ 💕 ✦';
+            position: absolute;
+            top: 12%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: clamp(1rem, 3vw, 1.4rem);
+            letter-spacing: 16px;
+            opacity: 0.5;
+            animation: twinkle 2.5s ease-in-out infinite alternate;
+        }
+
+        #screen-initial::after {
+            content: '🌸 💖 🌸 💖 🌸';
+            position: absolute;
+            bottom: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: clamp(1rem, 3vw, 1.4rem);
+            letter-spacing: 12px;
+            opacity: 0.45;
+            animation: twinkle 3s ease-in-out infinite alternate-reverse;
+        }
+
+        .initial-subtitle {
+            font-family: var(--font-cursive);
+            font-size: clamp(1.5rem, 6vw, 2.6rem);
+            color: var(--red-accent);
+            text-align: center;
+            text-shadow: 0 2px 10px rgba(216, 27, 96, 0.25);
+            animation: titleFloat 3s ease-in-out infinite alternate;
+            padding: 0 20px;
+        }
+
+        #btn-open {
+            position: relative;
+            background: linear-gradient(135deg, #ff80ab 0%, #e91e8c 60%, #d81b60 100%);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius-lg);
+            padding: clamp(18px, 4vw, 24px) clamp(32px, 8vw, 56px);
+            font-family: var(--font-main);
+            font-size: clamp(1rem, 4vw, 1.4rem);
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            box-shadow:
+                0 6px 25px rgba(233, 30, 140, 0.5),
+                0 2px 0 rgba(0,0,0,0.1) inset,
+                0 0 0 4px rgba(255, 255, 255, 0.6);
+            animation: pulseCTA 1.8s ease-in-out infinite;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            z-index: 2;
+        }
+
+        #btn-open:active { transform: scale(0.96) !important; }
+
+        @keyframes twinkle {
+            from { opacity: 0.3; transform: translateX(-50%) scale(0.95); }
+            to   { opacity: 0.65; transform: translateX(-50%) scale(1.05); }
+        }
+
+        @keyframes titleFloat {
+            from { transform: translateY(0); }
+            to   { transform: translateY(-8px); }
+        }
+
+        @keyframes pulseCTA {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 6px 25px rgba(233, 30, 140, 0.5),
+                            0 0 0 4px rgba(255,255,255,0.6),
+                            0 0 40px rgba(233, 30, 140, 0.25);
+            }
+            50% {
+                transform: scale(1.04);
+                box-shadow: 0 10px 40px rgba(233, 30, 140, 0.7),
+                            0 0 0 6px rgba(255,255,255,0.8),
+                            0 0 60px rgba(233, 30, 140, 0.45);
+            }
+        }
+
+        .orbit-heart {
+            position: absolute;
+            font-size: clamp(16px, 3vw, 22px);
+            pointer-events: none;
+            animation: orbitHeart 5s linear infinite;
+            transform-origin: center;
+            left: 50%;
+            top: 50%;
+        }
+
+        @keyframes orbitHeart {
+            from { transform: translate(-50%, -50%) rotate(var(--start)) translateX(var(--radius)) rotate(calc(-1 * var(--start))); }
+            to   { transform: translate(-50%, -50%) rotate(calc(var(--start) + 360deg)) translateX(var(--radius)) rotate(calc(-1 * (var(--start) + 360deg))); }
+        }
+
+        /* =============================================
+           SCREEN 2 — AQUARIUM & CHAT INTERFACE
+        ============================================= */
+        #screen-chat {
+            background: #b2ebf2;
+            overflow: hidden;
+            justify-content: flex-end; /* Chat is docked towards bottom on mobile */
+            padding: 0;
+            gap: 0;
+            z-index: 5;
+        }
+
+        /* ---- THE VIRTUAL AQUARIUM BACKGROUND ---- */
+        #aquarium-container {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, #e0f8fa 0%, #a7f3d0 25%, #4dd0e1 60%, #00838f 100%);
+            z-index: 1;
+            overflow: hidden;
+            pointer-events: auto;
+        }
+
+        #aquarium-container::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.35) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .aquarium-light-ray {
+            position: absolute;
+            top: 0;
+            left: 20%;
+            width: 140px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+            transform: skewX(-25deg);
+            transform-origin: top left;
+            animation: rayMove 7s ease-in-out infinite alternate;
+            pointer-events: none;
+            filter: blur(4px);
+            z-index: 2;
+        }
+
+        .aquarium-light-ray--2 {
+            left: 60%;
+            width: 200px;
+            animation-duration: 10s;
+            animation-delay: -3s;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16), transparent);
+        }
+
+        .aquarium-bubble {
+            position: absolute;
+            bottom: -20px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.08) 70%, transparent 100%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.4);
+            animation: bubbleRise linear infinite;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .seaweed {
+            position: absolute;
+            bottom: -10px;
+            width: 40px;
+            height: clamp(120px, 30vh, 200px);
+            fill: #26a69a;
+            opacity: 0.7;
+            transform-origin: bottom center;
+            z-index: 2;
+            pointer-events: none;
+            animation-duration: 4s;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+        }
+
+        .seaweed--left {
+            left: 5%;
+            animation-name: seaweedSwayLeft;
+        }
+
+        .seaweed--right {
+            right: 5%;
+            animation-delay: -2s;
+            animation-duration: 5s;
+            fill: #00897b;
+            animation-name: seaweedSwayRight;
+        }
+
+        /* ---- THE CUSTOM DRAWN HELLO KITTY FISH (SVG) ---- */
+        #virtual-fish {
+            position: absolute;
+            width: clamp(110px, 26vw, 150px);
+            height: clamp(90px, 22vw, 125px);
+            z-index: 4;
+            pointer-events: auto;
+            cursor: pointer;
+            will-change: transform, left, top;
+            animation: fishBobSimple 2s ease-in-out infinite alternate;
+        }
+
+        /* SVG Fish animations */
+        #svg-tail {
+            animation: tailWiggle 1s ease-in-out infinite alternate;
+        }
+
+        #svg-fin {
+            animation: finFlap 1.4s ease-in-out infinite alternate;
+        }
+
+        @keyframes tailWiggle {
+            from { transform: rotate(-8deg); }
+            to { transform: rotate(8deg); }
+        }
+
+        @keyframes finFlap {
+            from { transform: rotate(-10deg); }
+            to { transform: rotate(15deg); }
+        }
+
+        @keyframes fishBobSimple {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-8px); }
+        }
+
+        .food-flake {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: linear-gradient(135deg, #ffb74d, #f57c00);
+            border-radius: 50% 0 50% 50%;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            z-index: 3;
+            pointer-events: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            animation: flakeSpin 2s linear infinite;
+        }
+
+        #btn-feed {
+            position: absolute;
+            top: clamp(75px, 12vh, 120px);
+            right: 20px;
+            z-index: 30;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1.5px solid rgba(255, 255, 255, 0.6);
+            color: var(--text-dark);
+            border-radius: var(--radius-lg);
+            padding: 10px 22px;
+            font-family: var(--font-main);
+            font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0, 172, 193, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: pulseFeedBtn 2.2s infinite;
+        }
+
+        #btn-feed:hover {
+            transform: scale(1.05) translateY(-2px);
+            background: rgba(255, 255, 255, 0.55);
+        }
+
+        #btn-feed:active { transform: scale(0.96) translateY(0); }
+
+        .happy-heart {
+            position: absolute;
+            font-size: 22px;
+            pointer-events: none;
+            z-index: 15;
+            animation: heartRiseFade 1.4s ease-out forwards;
+        }
+
+        @keyframes heartRiseFade {
+            0% { transform: translateY(0) scale(0.6); opacity: 0; }
+            15% { opacity: 1; }
+            100% { transform: translateY(-60px) translateX(var(--drift)) scale(1.3); opacity: 0; }
+        }
+
+        /* ---- GLASSMORPHIC CHAT CONTAINER ---- */
+        #chat-card {
+            width: 100%;
+            height: 52%; /* Covers bottom half so aquarium shows above */
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-top: 2px solid rgba(255, 255, 255, 0.7);
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 -15px 40px rgba(0, 137, 123, 0.12);
+            position: relative;
+            z-index: 20;
+        }
+
+        #chat-topbar {
+            width: 100%;
+            background: rgba(255, 128, 171, 0.35);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: clamp(10px, 3vw, 16px) clamp(14px, 4vw, 22px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+            position: relative;
+            z-index: 5;
+            flex-shrink: 0;
+        }
+
+        #topbar-name {
+            font-size: clamp(1rem, 3.5vw, 1.2rem);
+            font-weight: 900;
+            color: var(--text-dark);
+        }
+
+        #topbar-status {
+            font-size: clamp(0.65rem, 2vw, 0.78rem);
+            color: var(--text-mid);
+            font-weight: 700;
+        }
+
+        #chat-window {
+            flex: 1;
+            width: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: clamp(12px, 3vw, 18px) clamp(14px, 4vw, 22px);
+            display: flex;
+            flex-direction: column;
+            gap: clamp(8px, 2vw, 14px);
+        }
+
+        .msg-bubble {
+            max-width: 82%;
+            padding: clamp(10px, 2.5vw, 13px) clamp(14px, 3.5vw, 18px);
+            border-radius: var(--radius-md);
+            font-size: clamp(0.85rem, 2.8vw, 0.98rem);
+            font-weight: 700;
+            line-height: 1.5;
+            word-break: break-word;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            position: relative;
+            animation: bubblePop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .msg-bubble.from-char {
+            align-self: flex-start;
+            background: var(--bubble-char);
+            color: var(--text-dark);
+            border-bottom-left-radius: 6px;
+        }
+
+        .msg-bubble.from-char .lang-badge {
+            display: inline-block;
+            font-size: 0.6rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--red-accent);
+            background: rgba(216, 27, 96, 0.1);
+            border-radius: 8px;
+            padding: 1.5px 6px;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+
+        #typing-indicator {
+            align-self: flex-start;
+            background: var(--bubble-char);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: var(--radius-md);
+            border-bottom-left-radius: 6px;
+            padding: clamp(10px, 2.5vw, 13px) clamp(16px, 4.5vw, 24px);
+            display: none;
+            gap: 5px;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+
+        #typing-indicator.visible { display: flex; }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--pink-deep);
+            animation: typingBounce 1.2s ease-in-out infinite;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        .chat-separator {
+            align-self: center;
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: var(--text-light);
+            background: rgba(255,255,255,0.7);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            padding: 3px 12px;
+            letter-spacing: 0.5px;
+        }
+
+        #chat-bottom {
+            width: 100%;
+            padding: clamp(8px, 2vw, 12px) clamp(14px, 4vw, 22px);
+            background: rgba(255,255,255,0.45);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255, 255, 255, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .fake-input {
+            flex: 1;
+            background: rgba(247, 232, 239, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 24px;
+            padding: clamp(8px, 2vw, 11px) clamp(14px, 3.5vw, 18px);
+            font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+            color: var(--text-light);
+            font-family: var(--font-main);
+            font-weight: 600;
+        }
+
+        .fake-send-btn {
+            width: clamp(36px, 9vw, 46px);
+            height: clamp(36px, 9vw, 46px);
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff80ab, #e91e8c);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(16px, 4vw, 20px);
+            box-shadow: 0 3px 12px rgba(233, 30, 140, 0.3);
+            animation: pulseSend 2s ease-in-out infinite;
+            flex-shrink: 0;
+        }
+
+        /* =============================================
+           HELLO KITTY FISH — GRAND REVEAL OVERLAY
+        ============================================= */
+        #reveal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 500;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+            background: radial-gradient(ellipse at 50% 30%,
+                rgba(255, 192, 219, 0.97) 0%,
+                rgba(255, 144, 191, 0.98) 50%,
+                rgba(233, 30, 140, 0.96) 100%);
+            backdrop-filter: blur(4px);
+        }
+
+        #reveal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .reveal-ring {
+            position: absolute;
+            width: clamp(220px, 55vw, 320px);
+            height: clamp(220px, 55vw, 320px);
+            border-radius: 50%;
+            border: 3px dashed rgba(255,255,255,0.5);
+            animation: spinRing 8s linear infinite;
+            pointer-events: none;
+        }
+
+        /* SVG Gift Box Popping Out */
+        #reveal-gift-box {
+            width: 140px;
+            height: 140px;
+            position: relative;
+            transform-origin: bottom center;
+            animation: boxShake 1.8s ease-in-out infinite;
+            z-index: 2;
+        }
+
+        @keyframes boxShake {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            20% { transform: rotate(-8deg) scale(1.05); }
+            40% { transform: rotate(8deg) scale(1.05); }
+            60% { transform: rotate(-4deg) scale(1); }
+            80% { transform: rotate(4deg) scale(1); }
+        }
+
+        #big-fish-wrap {
+            position: relative;
+            width: clamp(180px, 45vw, 240px);
+            height: clamp(180px, 45vw, 240px);
+            flex-shrink: 0;
+            transform: translateY(120px) scale(0.4);
+            opacity: 0;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.4),
+                        opacity 0.6s ease;
+            filter: drop-shadow(0 12px 30px rgba(255, 80, 150, 0.35));
+        }
+
+        #reveal-overlay.active #big-fish-wrap {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+
+        #big-fish-wrap.bobbing {
+            animation: bigFishBob 2.8s ease-in-out infinite;
+        }
+
+        @keyframes bigFishBob {
+            0%, 100% { transform: translateY(0) rotate(-3deg); }
+            50%       { transform: translateY(-18px) rotate(3deg); }
+        }
+
+        .reveal-halo {
+            position: absolute;
+            top: -12%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: clamp(28px, 7vw, 42px);
+            animation: haloSpin 3s linear infinite;
+            pointer-events: none;
+            filter: drop-shadow(0 0 12px gold);
+            z-index: 5;
+        }
+
+        #reveal-card {
+            margin-top: clamp(16px, 4vw, 24px);
+            background: rgba(255,255,255,0.88);
+            backdrop-filter: blur(16px);
+            border: 2px solid rgba(255,255,255,0.9);
+            border-radius: var(--radius-lg);
+            padding: clamp(20px, 5vw, 32px) clamp(22px, 6vw, 40px);
+            text-align: center;
+            max-width: min(380px, 90vw);
+            box-shadow: 0 20px 60px rgba(233, 30, 140, 0.3);
+            transform: translateY(40px);
+            opacity: 0;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.35s,
+                        opacity 0.6s ease 0.35s;
+        }
+
+        #reveal-overlay.active #reveal-card {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .reveal-title {
+            font-family: var(--font-cursive);
+            font-size: clamp(1.8rem, 6vw, 2.6rem);
+            color: var(--red-accent);
+            margin-bottom: 8px;
+        }
+
+        .reveal-msg {
+            font-size: clamp(0.85rem, 2.8vw, 1rem);
+            font-weight: 700;
+            color: var(--text-dark);
+            line-height: 1.65;
+            margin-bottom: 20px;
+        }
+
+        #reveal-dismiss {
+            background: linear-gradient(135deg, #ff80ab, #e91e8c);
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            padding: clamp(10px, 2.5vw, 14px) clamp(28px, 7vw, 44px);
+            font-family: var(--font-main);
+            font-size: clamp(0.85rem, 2.8vw, 1rem);
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(233, 30, 140, 0.4);
+            animation: pulseSend 2s ease-in-out infinite;
+            transition: transform 0.15s ease;
+        }
+
+        .confetti {
+            position: absolute;
+            top: -20px;
+            pointer-events: none;
+            z-index: 501;
+            animation: confettiFall linear forwards;
+            font-size: 20px;
+        }
+
+        /* =============================================
+           MEDIA QUERIES
+        ============================================= */
+        @media (max-width: 360px) {
+            #fish-character { width: 100px; height: 78px; }
+            .mystery-line--2 { font-size: 1.4rem; }
+            #btn-mystery { padding: 12px 28px; font-size: 0.85rem; }
+            .msg-bubble { max-width: 88%; }
+            #reveal-card { padding: 16px 18px; }
+            .reveal-title { font-size: 1.6rem; }
+            #chat-card { height: 55%; }
+        }
+
+        @media (max-width: 480px) {
+            #screen-initial::before,
+            #screen-initial::after {
+                letter-spacing: 8px;
+            }
+            .orbit-heart {
+                --radius: 70px !important;
+            }
+        }
+
+        @media (min-width: 520px) {
+            #screen-chat {
+                justify-content: center;
+                align-items: center;
+                background: linear-gradient(135deg, #b2ebf2 0%, #e0f7fa 100%);
+            }
+
+            #chat-card {
+                width: min(480px, 90vw);
+                height: min(600px, 70vh);
+                border-radius: var(--radius-lg);
+                border: 2px solid rgba(255, 255, 255, 0.7);
+                box-shadow: 0 25px 50px rgba(0, 137, 123, 0.15);
+            }
+
+            #btn-feed {
+                top: 30px;
+                right: 30px;
+            }
+        }
+
+        /* =============================================
+           ANIMATIONS & KEYFRAMES
+        ============================================= */
+        @keyframes rayMove {
+            0% { transform: skewX(-25deg) translateX(-10%); opacity: 0.5; }
+            100% { transform: skewX(-20deg) translateX(10%); opacity: 0.8; }
+        }
+
+        @keyframes bubbleRise {
+            0% { transform: translateY(0) translateX(0) scale(0.8); opacity: 0; }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; }
+            100% { transform: translateY(-105vh) translateX(30px) scale(1.2); opacity: 0; }
+        }
+
+        @keyframes seaweedSwayLeft {
+            0% { transform: rotate(-4deg); }
+            100% { transform: rotate(4deg); }
+        }
+
+        @keyframes seaweedSwayRight {
+            0% { transform: scaleX(-1) rotate(-4deg); }
+            100% { transform: scaleX(-1) rotate(4deg); }
+        }
+
+        @keyframes confettiFall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(105vh) rotate(720deg); opacity: 0; }
+        }
+
+        @keyframes spinRing {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes haloSpin {
+            0% { transform: translateX(-50%) rotate(0deg) scale(1); }
+            50% { transform: translateX(-50%) rotate(180deg) scale(1.15); }
+            100% { transform: translateX(-50%) rotate(360deg) scale(1); }
+        }
+
+        @keyframes typingBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        @keyframes pulseSend {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+
+        @keyframes pulseFeedBtn {
+            0%, 100% { box-shadow: 0 10px 30px rgba(0, 172, 193, 0.2); }
+            50% { box-shadow: 0 10px 35px rgba(0, 172, 193, 0.4); transform: translateY(-1px); }
+        }
+
+        @keyframes flakeSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes bubblePop {
+            0% { transform: scale(0.7); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- =============================================
+     MYSTERY FLASH OVERLAY
+ ============================================= -->
+<div id="mystery-flash"></div>
+
+<!-- =============================================
+     FLOATING PARTICLES LAYER
+ ============================================= -->
+<div id="particles-layer" aria-hidden="true"></div>
+
+<!-- =============================================
+     SCREEN 0 — MYSTERY INTRO
+ ============================================= -->
+<section id="screen-mystery" class="screen" role="main" aria-label="Pantalla de misterio">
+
+    <div class="mystery-aurora mystery-aurora--1"></div>
+    <div class="mystery-aurora mystery-aurora--2"></div>
+    <div class="mystery-aurora mystery-aurora--3"></div>
+
+    <div id="mystery-particles" aria-hidden="true"></div>
+
+    <div class="mystery-text-container">
+        <p class="mystery-line mystery-line--1" id="mline1">✦ Un detalle lindo ✦</p>
+        <p class="mystery-line mystery-line--2" id="mline2">Preparé algo sencillo pero especial...</p>
+        <p class="mystery-line mystery-line--3" id="mline3">Para alegrarte el día y sacarte una sonrisa 🌸</p>
+        <p class="mystery-line mystery-line--4" id="mline4">¿Quieres ver de qué se trata?</p>
+    </div>
+
+    <button id="btn-mystery" aria-label="Descubrir el mensaje">
+        Descubrir ✨
+    </button>
+
+</section>
+
+<!-- =============================================
+     SCREEN 1 — INITIAL / ENVELOPE BUTTON
+ ============================================= -->
+<section id="screen-initial" class="screen hidden" role="main" aria-label="Pantalla inicial de mensaje especial">
+
+    <p class="initial-subtitle">Un detallito para alegrar tu día 🌸</p>
+
+    <div style="position: relative; display: inline-block;">
+        <span class="orbit-heart" style="--start: 0deg;   --radius: 90px; animation-duration: 5s;">💕</span>
+        <span class="orbit-heart" style="--start: 90deg;  --radius: 90px; animation-duration: 5s;">🌸</span>
+        <span class="orbit-heart" style="--start: 180deg; --radius: 90px; animation-duration: 5s;">💗</span>
+        <span class="orbit-heart" style="--start: 270deg; --radius: 90px; animation-duration: 5s;">✨</span>
+
+        <button id="btn-open" aria-label="Abrir mensaje especial">
+            Abrir detalle 💌
+        </button>
+    </div>
+
+    <p style="font-size: clamp(0.75rem, 2.5vw, 0.9rem); color: var(--text-light); font-weight: 700; margin-top: 8px; letter-spacing: 0.5px;">
+        ¡Toca para descubrirlo! 🐟
+    </p>
+</section>
+
+<!-- =============================================
+     SCREEN 2 — AQUARIUM & CHAT INTERFACE
+ ============================================= -->
+<section id="screen-chat" class="screen hidden" role="main" aria-label="Pantalla de pecera virtual y chat">
+
+    <!-- THE VIRTUAL AQUARIUM BACKGROUND -->
+    <div id="aquarium-container">
+        <div class="aquarium-light-ray"></div>
+        <div class="aquarium-light-ray aquarium-light-ray--2"></div>
+
+        <svg class="seaweed seaweed--left" viewBox="0 0 100 300">
+            <path d="M50,300 Q20,200 50,150 T50,0 Q65,80 50,150 T50,300 Z" />
+        </svg>
+        <svg class="seaweed seaweed--right" viewBox="0 0 100 300">
+            <path d="M50,300 Q20,200 50,150 T50,0 Q65,80 50,150 T50,300 Z" />
+        </svg>
+
+        <!-- THE CUSTOM DRAWN VECTOR FISH (SVG) -->
+        <div id="virtual-fish" aria-label="Pez Mascota Virtual">
+            <svg id="svg-fish" viewBox="0 0 160 140" style="width: 100%; height: 100%;">
+                <defs>
+                    <linearGradient id="grad-face" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#ffe082" />
+                        <stop offset="60%" stop-color="#ffb74d" />
+                        <stop offset="100%" stop-color="#ffa726" />
+                    </linearGradient>
+                    <linearGradient id="grad-fin" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#ff80ab" />
+                        <stop offset="100%" stop-color="#e91e8c" />
+                    </linearGradient>
+                    <linearGradient id="grad-hood" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#ffffff" />
+                        <stop offset="70%" stop-color="#f5e6eb" />
+                        <stop offset="100%" stop-color="#e8cfd8" />
+                    </linearGradient>
+                </defs>
+
+                <!-- Tail fin (Wiggles!) -->
+                <g id="svg-tail" style="transform-origin: 100px 70px;">
+                    <path d="M100,60 C125,25 150,15 155,45 C145,70 155,95 155,100 C140,120 120,110 100,80 Z" fill="url(#grad-fin)" />
+                    <path d="M105,65 C120,40 135,35 140,50 C130,70 140,85 138,90 C128,102 118,95 105,75 Z" fill="#ff4081" opacity="0.4" />
+                </g>
+
+                <!-- Dorsal fin -->
+                <path d="M55,32 C65,10 85,15 90,32 Z" fill="url(#grad-fin)" />
+
+                <!-- Head and Face Group -->
+                <g id="svg-head">
+                    <ellipse cx="65" cy="70" rx="45" ry="42" fill="url(#grad-fin)" stroke="#3d1a2e" stroke-width="2.5" />
+                    <path d="M30,38 L15,18 L38,28 Z" fill="url(#grad-fin)" stroke="#3d1a2e" stroke-width="2.5" stroke-linejoin="round" />
+                    <path d="M28,34 L19,21 L33,27 Z" fill="#ff80ab" />
+                    <path d="M90,36 L108,18 L94,28 Z" fill="url(#grad-fin)" stroke="#3d1a2e" stroke-width="2.5" stroke-linejoin="round" />
+                    <path d="M91,32 L101,21 L94,27 Z" fill="#ff80ab" />
+
+                    <!-- Bow Ribbon -->
+                    <g transform="translate(32, 22)">
+                        <ellipse cx="-8" cy="0" rx="8" ry="6" fill="#ff3d00" stroke="#3d1a2e" stroke-width="2" />
+                        <ellipse cx="8" cy="0" rx="8" ry="6" fill="#ff3d00" stroke="#3d1a2e" stroke-width="2" />
+                        <circle cx="0" cy="0" r="4.5" fill="#ffd54f" stroke="#3d1a2e" stroke-width="2" />
+                    </g>
+
+                    <!-- White face cutout -->
+                    <ellipse cx="66" cy="74" rx="32" ry="28" fill="#ffffff" stroke="#3d1a2e" stroke-width="2.5" />
+
+                    <!-- Eyes (Classic vertical ovals) -->
+                    <ellipse id="svg-left-eye" cx="52" cy="70" rx="4" ry="6.5" fill="#3d1a2e" />
+
+                    <g id="svg-right-eye-group">
+                        <ellipse id="svg-right-eye" cx="80" cy="70" rx="4" ry="6.5" fill="#3d1a2e" />
+                        <path id="svg-right-eye-wink" d="M74,72 Q80,66 86,72" fill="none" stroke="#3d1a2e" stroke-width="3" stroke-linecap="round" style="display:none;" />
+                    </g>
+
+                    <!-- Yellow nose -->
+                    <ellipse id="svg-nose" cx="66" cy="77" rx="4" ry="2.6" fill="#ffd54f" stroke="#3d1a2e" stroke-width="1.5" />
+
+                    <!-- Whiskers -->
+                    <path d="M22,68 L12,66 M22,74 L8,74 M22,80 L12,82" stroke="#3d1a2e" stroke-width="2" stroke-linecap="round" />
+                    <path d="M102,68 L112,66 M102,74 L114,74 M102,80 L110,82" stroke="#3d1a2e" stroke-width="2" stroke-linecap="round" />
+
+                    <!-- Cheeks -->
+                    <ellipse cx="44" cy="78" rx="5" ry="3" fill="#ff5252" opacity="0.55" />
+                    <ellipse cx="88" cy="78" rx="5" ry="3" fill="#ff5252" opacity="0.55" />
+
+                    <!-- Default smile mouth -->
+                    <path id="svg-mouth" d="M58,84 Q62,89 66,84 Q70,89 74,84" fill="none" stroke="#d81b60" stroke-width="2.5" stroke-linecap="round" />
+                    <!-- Circle mouth for kissing/eating (toggled in JS) -->
+                    <ellipse id="svg-mouth-eat" cx="66" cy="83" rx="4.5" ry="6" fill="#d81b60" stroke="#3d1a2e" stroke-width="1.5" style="display:none;" />
+                </g>
+
+                <!-- Pectoral side fin -->
+                <g id="svg-fin" style="transform-origin: 60px 92px;">
+                    <path d="M55,90 C45,105 35,108 38,98 C40,90 50,88 55,90 Z" fill="url(#grad-fin)" stroke="#3d1a2e" stroke-width="1.5" />
+                </g>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Feed Fish Floating Button -->
+    <button id="btn-feed" aria-label="Alimentar pececito">
+        Dar de Comer 🍲
+    </button>
+
+    <!-- Glassmorphic Chat Card -->
+    <div id="chat-card">
+
+        <!-- TOP BAR -->
+        <div id="chat-topbar" role="banner">
+            <!-- Waving Fish SVG mini icon -->
+            <svg viewBox="0 0 160 140" style="width: 32px; height: 32px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));">
+                <path d="M100,60 C125,25 150,15 155,45 C145,70 155,95 155,100 C140,120 120,110 100,80 Z" fill="url(#grad-fin)" />
+                <path d="M55,32 C65,10 85,15 90,32 Z" fill="url(#grad-fin)" />
+                <ellipse cx="65" cy="70" rx="45" ry="42" fill="url(#grad-fin)" stroke="#3d1a2e" stroke-width="2.5" />
+                <ellipse cx="66" cy="74" rx="32" ry="28" fill="#ffffff" stroke="#3d1a2e" stroke-width="2.5" />
+                <ellipse cx="52" cy="70" rx="4" ry="6" fill="#3d1a2e" />
+                <ellipse cx="80" cy="70" rx="4" ry="6" fill="#3d1a2e" />
+                <ellipse cx="66" cy="77" rx="4" ry="2.6" fill="#ffd54f" stroke="#3d1a2e" stroke-width="1.5" />
+                <path d="M58,84 Q62,89 66,84 Q70,89 74,84" fill="none" stroke="#d81b60" stroke-width="2" />
+            </svg>
+            <div id="topbar-info">
+                <div id="topbar-name">Pez Kawaii 🎀</div>
+                <div id="topbar-status">
+                    <span class="status-dot" style="display:inline-block; vertical-align:middle; margin-right:5px;"></span>
+                    En línea · nadando contigo...
+                </div>
+            </div>
+            <span style="font-size: 22px; opacity: 0.8; animation: pulseSend 2s infinite;">💖</span>
+        </div>
+
+        <!-- CHAT MESSAGES WINDOW -->
+        <div id="chat-window" role="log" aria-live="polite" aria-label="Mensajes de chat">
+            <!-- Date separator -->
+            <div class="chat-separator">Hoy 💕</div>
+
+            <!-- Typing indicator (shown before messages appear) -->
+            <div id="typing-indicator" role="status" aria-label="Está escribiendo">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            </div>
+        </div>
+
+        <!-- BOTTOM BAR -->
+        <div id="chat-bottom" role="contentinfo">
+            <div class="fake-input" aria-hidden="true">Escribe un mensaje... 💕</div>
+            <div class="fake-send-btn" aria-hidden="true">💌</div>
+        </div>
+
+    </div><!-- /#chat-card -->
+</section>
+
+<!-- =============================================
+     HELLO KITTY FISH — GRAND REVEAL OVERLAY
+ ============================================= -->
+<div id="reveal-overlay" role="dialog" aria-modal="true" aria-label="¡Apareció el Pez Hello Kitty!">
+
+    <!-- Spinning decorative rings -->
+    <div class="reveal-ring"></div>
+    <div class="reveal-ring reveal-ring--2"></div>
+
+    <!-- BIG HELLO KITTY FISH CHARACTER (SVG popping out) -->
+    <div id="big-fish-wrap" aria-hidden="true">
+        <span class="reveal-halo">✨</span>
+        <svg viewBox="0 0 160 140" style="width: 100%; height: 100%;">
+            <!-- Reusing gradients -->
+            <path d="M100,60 C125,25 150,15 155,45 C145,70 155,95 155,100 C140,120 120,110 100,80 Z" fill="url(#grad-fin)" stroke="#3d1a2e" stroke-width="1.5" />
+            <path d="M55,32 C65,10 85,15 90,32 Z" fill="url(#grad-fin)" stroke="#3d1a2e" stroke-width="1.5" />
+            <g>
+                <ellipse cx="65" cy="70" rx="45" ry="42" fill="url(#grad-fin)" stroke="#3d1a2e" stroke-width="2.5" />
+                <path d="M30,38 L15,18 L38,28 Z" fill="url(#grad-fin)" stroke="#3d1a2e" stroke-width="2.5" />
+                <path d="M90,36 L108,18 L94,28 Z" fill="url(#grad-fin)" stroke="#3d1a2e" stroke-width="2.5" />
+                <g transform="translate(32, 22)">
+                    <ellipse cx="-8" cy="0" rx="8" ry="6" fill="#ff3d00" stroke="#3d1a2e" stroke-width="2" />
+                    <ellipse cx="8" cy="0" rx="8" ry="6" fill="#ff3d00" stroke="#3d1a2e" stroke-width="2" />
+                    <circle cx="0" cy="0" r="4.5" fill="#ffd54f" stroke="#3d1a2e" stroke-width="2" />
+                </g>
+                <!-- White Face cutout -->
+                <ellipse cx="66" cy="74" rx="32" ry="28" fill="#ffffff" stroke="#3d1a2e" stroke-width="2.5" />
+                <!-- Eyes -->
+                <ellipse cx="52" cy="70" rx="4" ry="6.5" fill="#3d1a2e" />
+                <!-- Wink winking eye in popup -->
+                <path d="M74,72 Q80,66 86,72" fill="none" stroke="#3d1a2e" stroke-width="3" stroke-linecap="round" />
+                <ellipse cx="44" cy="78" rx="5" ry="3" fill="#ff5252" opacity="0.55" />
+                <ellipse cx="88" cy="78" rx="5" ry="3" fill="#ff5252" opacity="0.55" />
+                <!-- Yellow Nose -->
+                <ellipse cx="66" cy="77" rx="4" ry="2.6" fill="#ffd54f" stroke="#3d1a2e" stroke-width="1.5" />
+                <!-- Kissing face mouth -->
+                <ellipse cx="66" cy="83" rx="4.5" ry="6" fill="#d81b60" stroke="#3d1a2e" stroke-width="1.5" />
+            </g>
+            <path d="M55,90 C45,105 35,108 38,98 C40,90 50,88 55,90 Z" fill="url(#grad-fin)" stroke="#3d1a2e" stroke-width="1.5" />
+        </svg>
+    </div>
+
+    <!-- CARD with special message -->
+    <div id="reveal-card">
+        <p class="reveal-title">Tengo un secreto... 🌸</p>
+        <p class="reveal-msg">
+            ¡Hola! Soy el Pez Hello Kitty 🐟🎀<br>
+            y vine para recordarte algo especial:<br>
+            <strong>Me gustas muchísimo, me encanta escucharte y me hace muy feliz tenerte en mi vida.</strong><br>
+            Espero que este pequeño mar y mi compañía te alegren el día. 😊✨
+        </p>
+        <button id="reveal-dismiss" aria-label="Cerrar y continuar">
+            ¡Aww, qué hermoso detalle! 💌
+        </button>
+    </div>
+
+</div><!-- /#reveal-overlay -->
+
+<!-- =============================================
+     JAVASCRIPT
+ ============================================= -->
+<script>
+// =============================================
+// CONFIGURATION
+// =============================================
+
+/* Romantic, sweet, and flirty messages in Portuguese, French and Spanish as requested */
+const MESSAGES = [
+    { lang: 'ES', text: 'Ayer me dijiste que querías un pececito... y bueno, ¡aquí tienes a tu nuevo compañero virtual! 🐟🎀' },
+    { lang: 'ES', text: 'Es un pececito Hello Kitty especial, hecho a tu medida porque sé lo mucho que te gusta. 💕' },
+    { lang: 'FR', text: 'Je voulais te dire que j\'adore t\'écouter... Ta voix et tes histoires rendent mes journées tellement plus douces. 🌸' },
+    { lang: 'PT', text: 'Adoro quando você compartilha o seu mundo comigo. É tão bom te ouvir falar sobre qualquer coisa. ✨' },
+    { lang: 'FR', text: 'Tu me manques... 🥺 Parler avec toi me fait tellement de bien.' },
+    { lang: 'PT', text: 'Você é muito especial para mim. ✨' },
+    { lang: 'FR', text: 'Mon amour. 🥰 Je pense à toi très souvent, tu sais ?' },
+    { lang: 'PT', text: 'Meu coração é seu. 💝 Você trouxe uma cor maravilhosa para a minha vida.' },
+    { lang: 'ES', text: 'Poder hablar contigo por horas y escucharte es, sin duda, de mis partes favoritas del día. 😊' },
+    { lang: 'FR', text: 'Je t\'aime! 🌹 Chaque moment avec toi est précieux.' },
+    { lang: 'PT', text: 'Eu te amo! 💖 Você me faz muito feliz.' },
+    { lang: 'ES', text: 'Espero que este pequeño mar te traiga alegría y te saque una sonrisa hoy. 🫧' },
+    { lang: 'ES', text: '¡Toca al pececito Hello Kitty o dale de comer! Tiene un secreto muy especial guardado para ti... 🤫👇' }
+];
+
+/* Floating particle pool — emojis for the background layer */
+const PARTICLE_EMOJIS = ['💕', '💗', '💖', '💝', '🌸', '✨', '🩷', '💞', '❤️', '🫧', '🫶'];
+
+/* Typing delay range in ms (Slower typing pace) */
+const TYPING_MIN = 2600;
+const TYPING_MAX = 3600;
+
+// =============================================
+// DOM REFERENCES
+// =============================================
+const screenMystery    = document.getElementById('screen-mystery');
+const screenInitial    = document.getElementById('screen-initial');
+const screenChat       = document.getElementById('screen-chat');
+const btnMystery       = document.getElementById('btn-mystery');
+const btnOpen          = document.getElementById('btn-open');
+const particlesLayer   = document.getElementById('particles-layer');
+const chatWindow       = document.getElementById('chat-window');
+const typingIndicator  = document.getElementById('typing-indicator');
+const mysteryFlash     = document.getElementById('mystery-flash');
+const virtualFish      = document.getElementById('virtual-fish');
+const btnFeed          = document.getElementById('btn-feed');
+const aquariumContainer= document.getElementById('aquarium-container');
+
+// SVG specific parts for expressions
+const svgRightEye      = document.getElementById('svg-right-eye');
+const svgRightEyeWink  = document.getElementById('svg-right-eye-wink');
+const svgMouth         = document.getElementById('svg-mouth');
+const svgMouthEat      = document.getElementById('svg-mouth-eat');
+
+// =============================================
+// MYSTERY INTRO — SEQUENTIAL TEXT REVEALS
+// =============================================
+
+let mysteryStarted = false;
+
+function startMysterySequence() {
+    if (mysteryStarted) return;
+    mysteryStarted = true;
+
+    // Spawn mystery particles
+    spawnMysteryParticles();
+
+    const lines = [
+        { el: document.getElementById('mline1'), delay: 600 },
+        { el: document.getElementById('mline2'), delay: 2200 },
+        { el: document.getElementById('mline3'), delay: 4000 },
+        { el: document.getElementById('mline4'), delay: 5800 },
+    ];
+
+    lines.forEach(({ el, delay }) => {
+        setTimeout(() => {
+            el.classList.add('visible');
+        }, delay);
+    });
+
+    // Show the button after all text appears
+    setTimeout(() => {
+        btnMystery.classList.add('visible');
+    }, 7200);
+}
+
+function spawnMysteryParticles() {
+    const container = document.getElementById('mystery-particles');
+    const count = 40;
+
+    for (let i = 0; i < count; i++) {
+        setTimeout(() => {
+            const p = document.createElement('div');
+            p.className = 'mystery-particle';
+
+            const x = Math.random() * 100;
+            const dur = 5 + Math.random() * 8;
+            const delay = Math.random() * 3;
+            const size = 2 + Math.random() * 3;
+            const hue = Math.random() > 0.5 ? '330' : '280';
+
+            p.style.cssText = `
+                left: ${x}%;
+                bottom: -10px;
+                width: ${size}px;
+                height: ${size}px;
+                background: hsla(${hue}, 80%, 70%, ${0.3 + Math.random() * 0.5});
+                --dur: ${dur}s;
+                --delay: ${delay}s;
+                box-shadow: 0 0 ${size * 2}px hsla(${hue}, 80%, 70%, 0.4);
+            `;
+
+            container.appendChild(p);
+
+            setTimeout(() => {
+                if (p.parentNode) p.remove();
+            }, (dur + delay + 1) * 1000);
+        }, i * 300);
+    }
+
+    // Keep spawning
+    setInterval(() => {
+        if (screenMystery.classList.contains('hidden')) return;
+
+        const p = document.createElement('div');
+        p.className = 'mystery-particle';
+        const x = Math.random() * 100;
+        const dur = 5 + Math.random() * 8;
+        const size = 2 + Math.random() * 3;
+        const hue = Math.random() > 0.5 ? '330' : '280';
+
+        p.style.cssText = `
+            left: ${x}%;
+            bottom: -10px;
+            width: ${size}px;
+            height: ${size}px;
+            background: hsla(${hue}, 80%, 70%, ${0.3 + Math.random() * 0.5});
+            --dur: ${dur}s;
+            box-shadow: 0 0 ${size * 2}px hsla(${hue}, 80%, 70%, 0.4);
+        `;
+
+        container.appendChild(p);
+        setTimeout(() => { if (p.parentNode) p.remove(); }, (dur + 1) * 1000);
+    }, 600);
+}
+
+// =============================================
+// MYSTERY → INITIAL TRANSITION
+// =============================================
+
+function mysteryToInitial() {
+    btnMystery.disabled = true;
+
+    for (let i = 0; i < 3; i++) {
+        setTimeout(() => {
+            const ring = document.createElement('div');
+            ring.className = 'transition-ring';
+            ring.style.animationDelay = `${i * 0.15}s`;
+            ring.style.borderColor = i === 0 
+                ? 'rgba(233, 30, 140, 0.8)' 
+                : i === 1 
+                    ? 'rgba(255, 128, 171, 0.6)' 
+                    : 'rgba(255, 255, 255, 0.4)';
+            document.body.appendChild(ring);
+            setTimeout(() => ring.remove(), 1500);
+        }, i * 100);
+    }
+
+    setTimeout(() => {
+        mysteryFlash.classList.add('active');
+    }, 300);
+
+    setTimeout(() => {
+        screenMystery.classList.add('hidden');
+        screenInitial.classList.remove('hidden');
+        createSparkleBurst(window.innerWidth / 2, window.innerHeight / 2);
+    }, 550);
+
+    setTimeout(() => {
+        mysteryFlash.classList.remove('active');
+    }, 850);
+}
+
+btnMystery.addEventListener('click', mysteryToInitial);
+btnMystery.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    mysteryToInitial();
+}, { passive: false });
+
+// =============================================
+// FLOATING PARTICLES SYSTEM
+// =============================================
+
+let particlesRunning = false;
+let particleInterval = null;
+
+function createParticle() {
+    const el = document.createElement('span');
+    el.className = 'particle';
+    el.textContent = PARTICLE_EMOJIS[Math.floor(Math.random() * PARTICLE_EMOJIS.length)];
+
+    const xPos   = Math.random() * 100;
+    const drift  = (Math.random() - 0.5) * 80;
+    const dur    = 6 + Math.random() * 6;
+    const delay  = Math.random() * 4;
+    const size   = 14 + Math.random() * 14;
+
+    el.style.cssText = `
+        left: ${xPos}%;
+        font-size: ${size}px;
+        --dur: ${dur}s;
+        --delay: ${delay}s;
+        --drift: ${drift}px;
+    `;
+
+    particlesLayer.appendChild(el);
+
+    setTimeout(() => {
+        if (el.parentNode) el.remove();
+    }, (dur + delay + 1) * 1000);
+}
+
+function startParticles() {
+    if (particlesRunning) return;
+    particlesRunning = true;
+
+    for (let i = 0; i < 6; i++) createParticle();
+
+    particleInterval = setInterval(() => {
+        createParticle();
+        if (Math.random() > 0.55) createParticle();
+    }, 1200);
+}
+
+let appInitialized = false;
+// Start the intro sequences safely
+function initMysteryApp() {
+    if (appInitialized) return;
+    appInitialized = true;
+    startParticles();
+    setTimeout(startMysterySequence, 400);
+}
+
+// Safely initialize the application.
+// If the screen element exists, we can run immediately to bypass readyState bugs in iOS Safari.
+if (document.getElementById('screen-mystery')) {
+    initMysteryApp();
+} else {
+    document.addEventListener('DOMContentLoaded', initMysteryApp);
+    window.addEventListener('load', initMysteryApp);
+}
+
+// Handle BFCache (Back-Forward Cache) restores on iOS Safari
+window.addEventListener('pageshow', (event) => {
+    if (event.persisted) {
+        // Reset state and re-initialize if page is loaded from cache
+        appInitialized = false;
+        initMysteryApp();
+    }
+});
+
+// =============================================
+// SPARKLE BURST EFFECT
+// =============================================
+
+function createSparkleBurst(x, y) {
+    const emojis = ['✨', '💖', '🌸', '💕', '💗', '🌺', '⭐'];
+    const count  = 14;
+
+    for (let i = 0; i < count; i++) {
+        const el = document.createElement('span');
+        el.className = 'sparkle-burst';
+        el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+
+        const angle  = (i / count) * 360;
+        const dist   = 60 + Math.random() * 90;
+        const tx     = Math.cos(angle * Math.PI / 180) * dist;
+        const ty     = Math.sin(angle * Math.PI / 180) * dist;
+        const size   = 20 + Math.random() * 16;
+
+        el.style.cssText = `
+            left: ${x}px;
+            top:  ${y}px;
+            font-size: ${size}px;
+            --tx: ${tx}px;
+            --ty: ${ty}px;
+            animation-duration: ${0.7 + Math.random() * 0.5}s;
+        `;
+
+        document.body.appendChild(el);
+        setTimeout(() => { if (el.parentNode) el.remove(); }, 1500);
+    }
+}
+
+// =============================================
+// SCREEN TRANSITION (Initial → Chat)
+// =============================================
+
+function transitionToChat(event) {
+    btnOpen.disabled = true;
+    btnOpen.classList.add('clicked');
+
+    const rect = btnOpen.getBoundingClientRect();
+    createSparkleBurst(rect.left + rect.width / 2, rect.top + rect.height / 2);
+
+    setTimeout(() => {
+        screenInitial.classList.add('hidden');
+
+        setTimeout(() => {
+            screenChat.classList.remove('hidden');
+            initAquarium();
+            startMessageLoop();
+        }, 350);
+    }, 200);
+}
+
+btnOpen.addEventListener('click', transitionToChat);
+btnOpen.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    transitionToChat(e);
+}, { passive: false });
+
+// =============================================
+// INTERACTIVE AQUARIUM ENGINE & VIRTUAL FISH PHYSICS
+// =============================================
+
+let aquariumWidth = window.innerWidth;
+let aquariumHeight = window.innerHeight;
+let aquariumTopBound = 0;
+let aquariumBottomBound = window.innerHeight * 0.48;
+
+let fishState = {
+    x: window.innerWidth / 2 - 60,
+    y: window.innerHeight * 0.2,
+    vx: 0,
+    vy: 0,
+    targetX: window.innerWidth / 2 - 60,
+    targetY: window.innerHeight * 0.2,
+    speed: 2.2,
+    scale: 1,
+    flip: 1, // 1 is default (swim left), -1 is flipped (swim right)
+    randomMoveTimer: 0,
+    isFeeding: false
+};
+
+let foodParticles = [];
+
+function initAquarium() {
+    resizeAquariumBounds();
+    spawnAquariumBubbles();
+    
+    fishState.x = aquariumWidth / 2 - 60;
+    fishState.y = (aquariumBottomBound - aquariumTopBound) / 2;
+    fishState.targetX = fishState.x;
+    fishState.targetY = fishState.y;
+
+    requestAnimationFrame(updateAquariumPhysics);
+}
+
+function resizeAquariumBounds() {
+    aquariumWidth = window.innerWidth;
+    aquariumHeight = window.innerHeight;
+    
+    if (window.innerWidth < 520) {
+        aquariumBottomBound = window.innerHeight * 0.48 - 40;
+    } else {
+        aquariumBottomBound = window.innerHeight - 80;
+    }
+}
+
+window.addEventListener('resize', () => {
+    resizeAquariumBounds();
+});
+
+function spawnAquariumBubbles() {
+    const bubbleCount = 18;
+    for (let i = 0; i < bubbleCount; i++) {
+        createAquariumBubble(true);
+    }
+
+    setInterval(() => {
+        if (!screenChat.classList.contains('hidden')) {
+            createAquariumBubble(false);
+        }
+    }, 1500);
+}
+
+function createAquariumBubble(randomStartHeight) {
+    const bubble = document.createElement('div');
+    bubble.className = 'aquarium-bubble';
+    
+    const size = 5 + Math.random() * 12;
+    const left = Math.random() * 100;
+    const duration = 8 + Math.random() * 6;
+    const delay = randomStartHeight ? -Math.random() * duration : 0;
+    
+    bubble.style.cssText = `
+        width: ${size}px;
+        height: ${size}px;
+        left: ${left}%;
+        animation-duration: ${duration}s;
+        animation-delay: ${delay}s;
+    `;
+    
+    aquariumContainer.appendChild(bubble);
+    
+    setTimeout(() => { bubble.remove(); }, (duration + 1) * 1000);
+}
+
+function feedFish() {
+    for (let i = 0; i < 7; i++) {
+        setTimeout(() => {
+            const flake = document.createElement('div');
+            flake.className = 'food-flake';
+            
+            const startX = 30 + Math.random() * (aquariumWidth - 60);
+            const startY = -15;
+            
+            flake.style.left = `${startX}px`;
+            flake.style.top = `${startY}px`;
+            
+            aquariumContainer.appendChild(flake);
+            
+            foodParticles.push({
+                element: flake,
+                x: startX,
+                y: startY,
+                vy: 1.2 + Math.random() * 0.8,
+                drift: (Math.random() - 0.5) * 0.3
+            });
+        }, i * 300);
+    }
+    
+    fishState.isFeeding = true;
+}
+
+btnFeed.addEventListener('click', feedFish);
+btnFeed.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    feedFish();
+}, { passive: false });
+
+// Tap-to-feed functionality in the water
+function dropFoodAt(x, y) {
+    const flake = document.createElement('div');
+    flake.className = 'food-flake';
+    
+    // Center flake under pointer
+    flake.style.left = `${x - 6}px`;
+    flake.style.top = `${y - 6}px`;
+    
+    aquariumContainer.appendChild(flake);
+    
+    foodParticles.push({
+        element: flake,
+        x: x,
+        y: y,
+        vy: 1.2 + Math.random() * 0.8,
+        drift: (Math.random() - 0.5) * 0.3
+    });
+    
+    fishState.isFeeding = true;
+}
+
+aquariumContainer.addEventListener('click', (e) => {
+    // Only drop food if clicking empty aquarium water space
+    if (e.target === aquariumContainer || e.target.classList.contains('aquarium-light-ray')) {
+        dropFoodAt(e.clientX, e.clientY);
+    }
+});
+
+aquariumContainer.addEventListener('touchend', (e) => {
+    if (e.target === aquariumContainer || e.target.classList.contains('aquarium-light-ray')) {
+        e.preventDefault();
+        const touch = e.changedTouches[0];
+        const rect = aquariumContainer.getBoundingClientRect();
+        const x = touch.clientX - rect.left;
+        const y = touch.clientY - rect.top;
+        dropFoodAt(x, y);
+    }
+}, { passive: false });
+
+function spawnHappyHeart(fx, fy) {
+    const heart = document.createElement('span');
+    heart.className = 'happy-heart';
+    heart.textContent = ['❤️', '✨', '💖', '💝', '🌸', '🩷'][Math.floor(Math.random() * 6)];
+    
+    const drift = (Math.random() - 0.5) * 60;
+    
+    heart.style.cssText = `
+        left: ${fx + 50}px;
+        top: ${fy + 10}px;
+        --drift: ${drift}px;
+    `;
+    
+    aquariumContainer.appendChild(heart);
+    setTimeout(() => { heart.remove(); }, 1500);
+}
+
+// Sets the fish visual expression (smiling, kissing/eating, or winking)
+function setFishExpression(style) {
+    if (style === 'normal') {
+        if (svgRightEye) svgRightEye.style.display = 'block';
+        if (svgRightEyeWink) {
+            svgRightEyeWink.style.style = 'none';
+            svgRightEyeWink.style.display = 'none';
+        }
+        if (svgMouth) svgMouth.style.display = 'block';
+        if (svgMouthEat) svgMouthEat.style.display = 'none';
+    } else if (style === 'happy') {
+        // Wink eye & Kissing mouth
+        if (svgRightEye) svgRightEye.style.display = 'none';
+        if (svgRightEyeWink) svgRightEyeWink.style.display = 'block';
+        if (svgMouth) svgMouth.style.display = 'none';
+        if (svgMouthEat) svgMouthEat.style.display = 'block';
+    }
+}
+
+function updateAquariumPhysics(timestamp) {
+    if (screenChat.classList.contains('hidden')) return;
+
+    // 1. UPDATE FOOD
+    for (let i = foodParticles.length - 1; i >= 0; i--) {
+        const flake = foodParticles[i];
+        flake.y += flake.vy;
+        flake.x += flake.drift;
+        flake.element.style.top = `${flake.y}px`;
+        flake.element.style.left = `${flake.x}px`;
+
+        if (flake.y > aquariumBottomBound + 30) {
+            flake.element.remove();
+            foodParticles.splice(i, 1);
+        }
+    }
+
+    // 2. FISH CHASE MATH
+    if (foodParticles.length > 0) {
+        const targetFlake = foodParticles[0];
+        fishState.targetX = targetFlake.x - 55;
+        fishState.targetY = targetFlake.y - 45;
+        fishState.speed = 3.8;
+    } else {
+        fishState.speed = 1.4;
+        fishState.isFeeding = false;
+        
+        if (timestamp > fishState.randomMoveTimer) {
+            fishState.targetX = 20 + Math.random() * (aquariumWidth - 140);
+            fishState.targetY = 40 + Math.random() * (aquariumBottomBound - 100);
+            fishState.randomMoveTimer = timestamp + 3000 + Math.random() * 3000;
+        }
+    }
+
+    const dx = fishState.targetX - fishState.x;
+    const dy = fishState.targetY - fishState.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    if (distance > 5) {
+        fishState.vx = (dx / distance) * fishState.speed;
+        fishState.vy = (dy / distance) * fishState.speed;
+        
+        fishState.x += fishState.vx;
+        fishState.y += fishState.vy;
+        
+        if (fishState.vx > 0.1) {
+            fishState.flip = -1; // swim right -> flip
+        } else if (fishState.vx < -0.1) {
+            fishState.flip = 1; // swim left -> normal
+        }
+    } else {
+        fishState.vx = 0;
+        fishState.vy = 0;
+    }
+
+    // 3. COLLISION EATING CHECK
+    if (foodParticles.length > 0) {
+        const fishCenterX = fishState.x + 65;
+        const fishCenterY = fishState.y + 55;
+        
+        for (let i = foodParticles.length - 1; i >= 0; i--) {
+            const flake = foodParticles[i];
+            const distToFood = Math.sqrt(Math.pow(fishCenterX - flake.x, 2) + Math.pow(fishCenterY - flake.y, 2));
+            
+            if (distToFood < 45) {
+                flake.element.remove();
+                foodParticles.splice(i, 1);
+                
+                // Trigger Eating happy reaction!
+                setFishExpression('happy');
+                fishState.scale = 1.25;
+                
+                for (let h = 0; h < 4; h++) {
+                    setTimeout(() => {
+                        spawnHappyHeart(fishState.x, fishState.y);
+                    }, h * 200);
+                }
+
+                if (window.AudioContext) {
+                    playFeedSparkleSound();
+                }
+                
+                setTimeout(() => {
+                    fishState.scale = 1.0;
+                    setFishExpression('normal');
+                }, 1600);
+                break;
+            }
+        }
+    }
+
+    // Update fish element style
+    virtualFish.style.left = `${fishState.x}px`;
+    virtualFish.style.top = `${fishState.y}px`;
+    virtualFish.style.transform = `scaleX(${fishState.flip}) scale(${fishState.scale})`;
+
+    requestAnimationFrame(updateAquariumPhysics);
+}
+
+function playFeedSparkleSound() {
+    try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        
+        osc.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5 note
+        osc.frequency.exponentialRampToValueAtTime(880.00, audioCtx.currentTime + 0.15); // A5 note
+        
+        gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+        gainNode.gain.linearRampToValueAtTime(0.08, audioCtx.currentTime + 0.02);
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.25);
+        
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.3);
+    } catch(e) {}
+}
+
+// =============================================
+// CHAT ENGINE
+// =============================================
+
+let messageIndex = 0;
+let chatRunning  = false;
+let chatTimeout  = null;
+
+function appendMessage(text, lang) {
+    typingIndicator.classList.remove('visible');
+    
+    const bubble = document.createElement('div');
+    bubble.className = 'msg-bubble from-char';
+
+    const badge = document.createElement('span');
+    badge.className = 'lang-badge';
+    badge.textContent = lang;
+
+    const msgText = document.createTextNode(text);
+
+    bubble.appendChild(badge);
+    bubble.appendChild(msgText);
+
+    chatWindow.insertBefore(bubble, typingIndicator);
+    scrollToBottom();
+}
+
+function scheduleNextMessage() {
+    typingIndicator.classList.add('visible');
+    scrollToBottom();
+
+    const delay = TYPING_MIN + Math.random() * (TYPING_MAX - TYPING_MIN);
+
+    chatTimeout = setTimeout(() => {
+        const { lang, text } = MESSAGES[messageIndex];
+        appendMessage(text, lang);
+
+        messageIndex = (messageIndex + 1) % MESSAGES.length;
+
+        messagesShown++;
+        if (messagesShown === REVEAL_AFTER && !revealTriggered) {
+            chatTimeout = setTimeout(showReveal, 900);
+            return;
+        }
+        if (messagesShown > REVEAL_AFTER && (messagesShown % REVEAL_AFTER === 0) && !revealTriggered) {
+            chatTimeout = setTimeout(showReveal, 900);
+            return;
+        }
+
+        chatTimeout = setTimeout(scheduleNextMessage, 4500 + Math.random() * 1500);
+    }, delay);
+}
+
+function startMessageLoop() {
+    if (chatRunning) return;
+    chatRunning = true;
+    chatTimeout = setTimeout(scheduleNextMessage, 1000);
+}
+
+function scrollToBottom() {
+    requestAnimationFrame(() => {
+        chatWindow.scrollTo({
+            top: chatWindow.scrollHeight,
+            behavior: 'smooth'
+        });
+    });
+}
+
+function triggerFishTapReaction() {
+    const rect = virtualFish.getBoundingClientRect();
+    createSparkleBurst(rect.left + rect.width / 2, rect.top + rect.height / 2);
+    
+    setFishExpression('happy');
+    fishState.scale = 1.15;
+    spawnHappyHeart(fishState.x, fishState.y);
+    
+    setTimeout(() => {
+        fishState.scale = 1.0;
+        setFishExpression('normal');
+    }, 1500);
+}
+
+virtualFish.addEventListener('click', triggerFishTapReaction);
+virtualFish.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    triggerFishTapReaction();
+}, { passive: false });
+
+// =============================================
+// HELLO KITTY FISH — GRAND REVEAL
+// =============================================
+
+const REVEAL_AFTER = 8;
+let messagesShown = 0;
+let revealTriggered = false;
+
+const revealOverlay = document.getElementById('reveal-overlay');
+const bigFishWrap   = document.getElementById('big-fish-wrap');
+
+function launchConfetti() {
+    const pieces = ['🌸', '💕', '💖', '✨', '🌺', '💗', '⭐', '🎀', '💝'];
+    const count  = 30;
+
+    for (let i = 0; i < count; i++) {
+        const el  = document.createElement('span');
+        el.className = 'confetti';
+        el.textContent = pieces[Math.floor(Math.random() * pieces.length)];
+
+        const xPos = Math.random() * 100;
+        const dur  = 2.5 + Math.random() * 2.5;
+        const delay = Math.random() * 1.2;
+        const size = 14 + Math.random() * 18;
+
+        el.style.cssText = `
+            left: ${xPos}%;
+            font-size: ${size}px;
+            animation-duration: ${dur}s;
+            animation-delay: ${delay}s;
+        `;
+
+        revealOverlay.appendChild(el);
+        setTimeout(() => { if (el.parentNode) el.remove(); }, (dur + delay + 0.5) * 1000);
+    }
+}
+
+function showReveal() {
+    revealTriggered = true;
+
+    clearTimeout(chatTimeout);
+    typingIndicator.classList.remove('visible');
+
+    revealOverlay.classList.add('active');
+
+    launchConfetti();
+    setTimeout(launchConfetti, 800);
+
+    setTimeout(() => {
+        bigFishWrap.classList.add('bobbing');
+    }, 900);
+}
+
+function closeReveal() {
+    revealOverlay.classList.remove('active');
+
+    setTimeout(() => {
+        bigFishWrap.classList.remove('bobbing');
+
+        bigFishWrap.style.transition = 'none';
+        requestAnimationFrame(() => {
+            bigFishWrap.style.transition = '';
+        });
+
+        revealTriggered = false;
+        chatTimeout = setTimeout(scheduleNextMessage, 1000);
+    }, 700);
+}
+
+document.getElementById('reveal-dismiss').addEventListener('click', closeReveal);
+document.getElementById('reveal-dismiss').addEventListener('touchend', (e) => {
+    e.preventDefault();
+    closeReveal();
+}, { passive: false });
+
+revealOverlay.addEventListener('click', (e) => {
+    if (e.target === revealOverlay) closeReveal();
+});
+
+</script>
+</body>
+</html>

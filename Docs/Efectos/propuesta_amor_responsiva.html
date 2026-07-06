@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>¿Quieres ser mi novia?</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600;800&family=Great+Vibes&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#060308;
+      --accent:#ff6b9a;
+      --accent2:#ffb6c1;
+      --soft:#ffd9e2;
+      --glass: rgba(255,255,255,0.06);
+    }
+    html,body{height:100%;margin:0;font-family:Montserrat,system-ui,Arial,sans-serif;background:radial-gradient(ellipse at 20% 10%, rgba(255,107,154,0.06), transparent 8%), linear-gradient(180deg,#0b0710 0%, #060308 60%);color:#fff;overflow:hidden}
+
+    /* Center card */
+    .stage{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+    .card{width:100%;max-width:980px;background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));backdrop-filter:blur(6px);border-radius:20px;padding:28px;box-shadow:0 10px 40px rgba(0,0,0,0.6);position:relative;overflow:hidden}
+
+    header{display:flex;gap:16px;align-items:center}
+    .logo{font-family:'Great Vibes',cursive;font-size:44px;color:var(--soft);letter-spacing:1px}
+    .subtitle{font-size:14px;opacity:0.9}
+
+    /* clouds */
+    .clouds{position:absolute;inset:0;pointer-events:none}
+    .cloud{position:absolute;filter:blur(8px);opacity:0.15}
+
+    /* main content */
+    .content{display:grid;grid-template-columns:1fr 360px;gap:18px;align-items:center}
+    .message{padding:18px}
+    h1{font-size:34px;margin:0 0 8px 0;color:var(--accent)}
+    p.lead{margin:0 0 12px 0;font-size:16px;color:#ffeef6}
+    .romantic{font-size:20px;font-weight:600;color:var(--soft)}
+
+    /* interactive box */
+    .box{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:14px;border:1px solid rgba(255,255,255,0.03)}
+    .btn{display:inline-block;padding:12px 18px;border-radius:12px;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;font-weight:700;border:none;cursor:pointer;box-shadow:0 6px 18px rgba(255,107,154,0.12);transition:transform .18s ease}
+    .btn:active{transform:translateY(2px)}
+
+    input[type=text]{width:100%;padding:10px;border-radius:10px;border:none;background:rgba(255,255,255,0.02);color:#fff;outline:none;font-size:15px}
+
+    /* falling "Te amo" */
+    .rainArea{position:absolute;inset:0;pointer-events:none}
+    .drop{position:absolute;top:-40px;font-weight:800;font-size:18px;white-space:nowrap;text-shadow:0 1px 0 rgba(0,0,0,0.7)}
+
+    /* right panel */
+    .right{display:flex;flex-direction:column;gap:12px}
+    .preview{flex:1;display:flex;align-items:center;justify-content:center;border-radius:12px;padding:12px}
+
+    /* heart animation */
+    .big-heart{font-size:86px;transform-origin:center;animation:beat 1s infinite ease-in-out}
+    @keyframes beat{0%{transform:scale(1)}40%{transform:scale(1.12)}100%{transform:scale(1)}}
+
+    /* footer */
+    footer{display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-size:13px;opacity:0.9}
+
+    /* responsive */
+    @media (max-width:880px){
+      .content{grid-template-columns:1fr;}
+      .right{order:-1}
+      .big-heart{font-size:64px}
+      h1{font-size:28px}
+    }
+
+    /* sparkle */
+    .sparkle{position:absolute;width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.9);filter:blur(6px);opacity:0.7}
+
+    /* small helper */
+    .small{font-size:13px;opacity:0.9}
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div class="card">
+
+      <div class="clouds" aria-hidden="true">
+        <!-- decorative clouds -->
+        <svg class="cloud" style="left:-6%;top:6%;width:420px" viewBox="0 0 64 24" xmlns="http://www.w3.org/2000/svg"><g fill="#fff"><ellipse cx="22" cy="12" rx="22" ry="9" /><ellipse cx="42" cy="10" rx="14" ry="7" /></g></svg>
+        <svg class="cloud" style="right:-10%;top:12%;width:300px" viewBox="0 0 64 24" xmlns="http://www.w3.org/2000/svg"><g fill="#fff"><ellipse cx="22" cy="12" rx="22" ry="9" /><ellipse cx="42" cy="10" rx="14" ry="7" /></g></svg>
+        <svg class="cloud" style="left:8%;bottom:6%;width:360px" viewBox="0 0 64 24" xmlns="http://www.w3.org/2000/svg"><g fill="#fff"><ellipse cx="22" cy="12" rx="22" ry="9" /><ellipse cx="42" cy="10" rx="14" ry="7" /></g></svg>
+      </div>
+
+      <header>
+        <div class="logo">Te Amo</div>
+        <div class="subtitle small">Un pequeño universo hecho para ti 💫</div>
+      </header>
+
+      <div class="content">
+        <div class="message">
+          <h1 id="title">¿Quieres ser mi novia? 💖</h1>
+          <p class="lead">He preparado esto con todo mi corazón. Hay sorpresas, frases que caerán como lluvia y muchas cosas lindas. Pasa el cursor por una frase para pausarla.</p>
+
+          <div class="box" style="margin-top:12px">
+            <p class="romantic">Escribe el nombre de la persona a quien quieres pedirle esto y presiona "Personalizar" para que aparezca su nombre en la propuesta:</p>
+            <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
+              <input id="nameInput" type="text" placeholder="Nombre... (p.ej. Ana)" />
+              <button id="personalize" class="btn">Personalizar</button>
+            </div>
+            <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
+              <button id="askBtn" class="btn">Hacer la pregunta 💌</button>
+              <button id="surpriseBtn" class="btn" style="background:linear-gradient(90deg,#ffd1e6,#ff6b9a)">Sorpresa ✨</button>
+            </div>
+          </div>
+
+          <p style="margin-top:14px" class="small">Consejo: abre esto en pantalla completa para vivir la sorpresa como en el cine 🎬</p>
+        </div>
+
+        <aside class="right">
+          <div class="preview box" id="preview">
+            <div style="text-align:center">
+              <div class="big-heart">❤️</div>
+              <div id="previewText" style="margin-top:8px;font-weight:700;color:var(--soft)">Eres mi persona favorita.</div>
+            </div>
+          </div>
+
+          <div class="box" style="display:flex;flex-direction:column;gap:8px">
+            <div class="small">Frases románticas rápidas:</div>
+            <div class="small">🌸 Eres mi calma en la tormenta.</div>
+            <div class="small">🌙 Con tus ojos quiero mi noche.</div>
+            <div class="small">✨ Cada latido me recuerda a ti.</div>
+          </div>
+        </aside>
+      </div>
+
+      <footer>
+        <div class="small">Hecho con mucho 💖 y código</div>
+        <div class="small">Si quieres lo personalizo con más efectos</div>
+      </footer>
+
+      <!-- falling area -->
+      <div class="rainArea" id="rainArea" aria-hidden="true"></div>
+      <!-- sparkles -->
+      <div id="sparkles"></div>
+    </div>
+  </div>
+
+  <script>
+    // Helpful utilities
+    const rand = (a,b)=> Math.random()*(b-a)+a;
+    const colors = ['#ff6b9a','#ff9ab8','#ffd1e6','#ff7fb3','#ffb6c1','#ffd6e8'];
+    const phrases = [
+      'Te amo', 'Te amo con todo', 'Eres mi todo', '¿Quieres ser mi novia?', 'Eres mi sueño', 'Mi persona favorita', 'Contigo siempre', 'Me encantas', 'Eres mi alegría', 'Quiero cuidarte', 'Eres mi hogar', 'Te quiero a mi lado']
+
+    // Create falling "Te amo" elements
+    const rainArea = document.getElementById('rainArea');
+    const drops = [];
+
+    function makeDrop(text, left){
+      const el = document.createElement('div');
+      el.className='drop';
+      el.style.left=(left||rand(2,96))+'%';
+      el.style.color = colors[Math.floor(rand(0,colors.length))];
+      el.style.fontSize = Math.floor(rand(14,24))+'px';
+      el.textContent = text;
+      el.style.opacity = rand(0.85,1);
+      el.style.transform = 'translateY(-30px) rotate('+rand(-10,10)+'deg)';
+      // animation
+      const duration = rand(4200,9200);
+      el.animate([
+        {transform:'translateY(-30px) rotate('+rand(-20,20)+'deg)', opacity:0},
+        {transform:'translateY(calc(100vh + 40px)) rotate('+rand(-40,40)+'deg)', opacity:1}
+      ],{duration:duration,iterations:1,easing:'cubic-bezier(.2,.8,.2,1)'}).onfinish = ()=>{
+        el.remove();
+      };
+
+      // pause on hover
+      el.addEventListener('mouseenter', ()=>{
+        // clone and pause animation by freezing computed position
+        const rect = el.getBoundingClientRect();
+        el.style.position='fixed';
+        el.style.left = rect.left+'px';
+        el.style.top = rect.top+'px';
+        el.style.transform='none';
+        el.style.transition='transform .25s ease';
+      });
+      el.addEventListener('mouseleave', ()=>{
+        el.remove();
+      });
+
+      rainArea.appendChild(el);
+      drops.push(el);
+    }
+
+    // spawn drops continuously
+    let spawnInterval = setInterval(()=>{
+      const text = phrases[Math.floor(rand(0,phrases.length))];
+      makeDrop(text);
+    }, 350);
+
+    // personalize behavior
+    const nameInput = document.getElementById('nameInput');
+    const personalize = document.getElementById('personalize');
+    const previewText = document.getElementById('previewText');
+    const title = document.getElementById('title');
+    personalize.addEventListener('click', ()=>{
+      const name = nameInput.value.trim();
+      if(!name){
+        nameInput.focus();
+        nameInput.placeholder = 'Escribe un nombre para personalizar ✍️';
+        return;
+      }
+      previewText.textContent = `${name}, eres mi persona favorita.`;
+      title.textContent = `¿Quieres ser mi novia, ${name}? 💖`;
+      // create a personalized big drop
+      for(let i=0;i<10;i++) makeDrop(`Te amo, ${name} ❤️`, rand(30,70));
+    });
+
+    // ask button — show modal-like pulse and shower of hearts
+    document.getElementById('askBtn').addEventListener('click', ()=>{
+      // stop regular drops briefly
+      clearInterval(spawnInterval);
+      // big confetti of phrases
+      for(let i=0;i<60;i++){
+        setTimeout(()=>makeDrop(phrases[Math.floor(rand(0,phrases.length))]), i*40);
+      }
+      // heart pulse and tiny sparkles
+      const heart = document.querySelector('.big-heart');
+      heart.animate([{transform:'scale(1)'},{transform:'scale(1.25)'},{transform:'scale(1)'}],{duration:900,iterations:3});
+      // restart
+      setTimeout(()=>{spawnInterval = setInterval(()=>{const text = phrases[Math.floor(rand(0,phrases.length))]; makeDrop(text);},350);}, 2500);
+    });
+
+    // surprise button — full-screen gentle snowfall of "Te amo" + sound
+    document.getElementById('surpriseBtn').addEventListener('click', async ()=>{
+      // request fullscreen for immersive surprise
+      try{ if(document.documentElement.requestFullscreen) await document.documentElement.requestFullscreen(); }catch(e){}
+      // large shower
+      for(let i=0;i<180;i++){
+        setTimeout(()=>makeDrop(phrases[Math.floor(rand(0,phrases.length))]), i*25);
+      }
+      // subtle sparkles
+      createSparkles(40);
+    });
+
+    // sparkles generator
+    function createSparkles(n){
+      const container = document.getElementById('sparkles');
+      for(let i=0;i<n;i++){
+        const s = document.createElement('div');
+        s.className='sparkle';
+        s.style.left = rand(2,98)+'%';
+        s.style.top = rand(2,98)+'%';
+        s.style.width = s.style.height = rand(4,10)+'px';
+        s.style.opacity = rand(0.3,0.95);
+        container.appendChild(s);
+        s.animate([{opacity:0},{opacity:1},{opacity:0}],{duration:rand(900,2400),iterations:3}).onfinish=()=>s.remove();
+      }
+    }
+
+    // gentle floating clouds movement
+    document.querySelectorAll('.cloud').forEach((c,i)=>{
+      const dir = i%2===0? -1:1;
+      c.animate([{transform:`translateX(0px)`},{transform:`translateX(${dir*60}px)`},{transform:`translateX(0px)`}],{duration:11000+ i*1600,iterations:Infinity,easing:'ease-in-out'});
+    });
+
+    // accessibility: pause rain on visibility change
+    document.addEventListener('visibilitychange', ()=>{
+      if(document.hidden) clearInterval(spawnInterval);
+      else if(!spawnInterval) spawnInterval = setInterval(()=>{const text = phrases[Math.floor(rand(0,phrases.length))]; makeDrop(text);},350);
+    });
+
+    // small initial animation
+    window.addEventListener('load', ()=>{
+      createSparkles(12);
+      // small welcoming drops
+      for(let i=0;i<14;i++) setTimeout(()=>makeDrop(['Te amo','Te quiero','Eres única','Mi vida','Contigo'][Math.floor(rand(0,5))]), i*120);
+    });
+  </script>
+</body>
+</html>
